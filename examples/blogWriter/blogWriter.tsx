@@ -89,8 +89,9 @@ const LLMEditor = gsx.StreamComponent<LLMEditorProps>(async ({ draft }) => {
 
   return (
     <ChatCompletion
+      providerName="claude"
       stream={true}
-      model="gpt-4o-mini"
+      model="claude-3-5-sonnet-20240620"
       temperature={0}
       messages={[
         { role: "system", content: systemPrompt },
@@ -141,13 +142,19 @@ export const BlogWritingWorkflow =
   gsx.StreamComponent<BlogWritingWorkflowProps>(async ({ prompt }) => {
     return (
       <OpenAIProvider apiKey={process.env.OPENAI_API_KEY}>
-        <ParallelResearch prompt={prompt}>
-          {(research) => (
-            <LLMWriter prompt={prompt} research={research.flat()}>
-              {(draft) => <LLMEditor draft={draft} stream={true} />}
-            </LLMWriter>
-          )}
-        </ParallelResearch>
+        <OpenAIProvider
+          apiKey={process.env.CLAUDE_API_KEY}
+          providerName="claude"
+          apiEndpoint="https://api.anthropic.com/v1"
+        >
+          <ParallelResearch prompt={prompt}>
+            {(research) => (
+              <LLMWriter prompt={prompt} research={research.flat()}>
+                {(draft) => <LLMEditor draft={draft} stream={true} />}
+              </LLMWriter>
+            )}
+          </ParallelResearch>
+        </OpenAIProvider>
       </OpenAIProvider>
     );
   });
