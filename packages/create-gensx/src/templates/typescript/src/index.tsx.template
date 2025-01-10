@@ -1,5 +1,5 @@
 import { gsx } from "gensx";
-import { OpenAIProvider, ChatCompletion } from "@gensx/openai";
+import { ChatCompletion, OpenAIProvider } from "@gensx/openai";
 
 interface RespondProps {
   userInput: string;
@@ -13,12 +13,12 @@ const Respond = gsx.Component<RespondProps, RespondOutput>(
 );
 
 const App = gsx.Component<Record<string, never>, string>(async () => {
-  return await gsx.execute(
+  return await gsx.execute<string>(
     <OpenAIProvider apiKey={process.env.OPENAI_API_KEY}>
       <Respond userInput="Hi there! Say 'Hello, World!' and nothing else." />
     </OpenAIProvider>,
   );
 });
 
-const result = await gsx.execute(<App />);
+const result = await gsx.execute<string>(<App />);
 console.log(result);

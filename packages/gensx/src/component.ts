@@ -5,10 +5,8 @@ import type {
   StreamComponentProps,
   StreamingComponent,
   WorkflowComponent,
-  WorkflowContext,
 } from "./types";
 
-import { withContext } from "./context";
 import { JSX } from "./jsx-runtime";
 import { resolveDeep } from "./resolve";
 
@@ -67,11 +65,9 @@ export function Component<P, O>(
 
       let finalResult: O;
       if (props.children) {
-        finalResult = await withContext({}, () =>
-          props.children?.(result as O),
-        );
+        finalResult = await resolveDeep(props.children(result as O));
       } else {
-        finalResult = result as O; // TODO: Extract type information from children.
+        finalResult = result as O;
       }
       return finalResult;
     };
@@ -88,7 +84,7 @@ export function Component<P, O>(
 }
 
 export function StreamComponent<P>(
-  fn: (props: P) => MaybePromise<Streamable | JSX.Element>, // It does not make sense to stream from more than one child element
+  fn: (props: P) => MaybePromise<Streamable | JSX.Element>,
 ): StreamingComponent<P, boolean> {
   function GsxStreamComponent<Stream extends boolean = false>(
     props: StreamComponentProps<P, Stream>,
@@ -97,8 +93,8 @@ export function StreamComponent<P>(
       const iterator: Streamable = await resolveDeep(fn(props));
       if (props.stream) {
         if (props.children) {
-          return withContext({}, () =>
-            props.children?.(iterator as unknown as Streamable & string),
+          return await resolveDeep(
+            props.children(iterator as unknown as Streamable & string),
           );
         }
         return iterator as Stream extends true ? Streamable : string;
@@ -109,8 +105,8 @@ export function StreamComponent<P>(
         result += token;
       }
       if (props.children) {
-        return withContext({}, () =>
-          props.children?.(result as unknown as Streamable & string),
+        return await resolveDeep(
+          props.children(result as unknown as Streamable & string),
         );
       }
       return result as Stream extends true ? Streamable : string;
@@ -124,32 +120,5 @@ export function StreamComponent<P>(
   }
 
   const component = GsxStreamComponent;
-  return component;
-}
-
-export function ContextProvider<P, C extends Partial<WorkflowContext>>(
-  fn: (props: P) => MaybePromise<C>,
-): WorkflowComponent<P, never> {
-  function GsxContextProvider(
-    props: ComponentProps<P, never>,
-  ): () => Promise<never> {
-    return async () => {
-      const context = await fn(props);
-      const children = props.children;
-      if (!children) {
-        console.warn("Provider has no children");
-        return null as never;
-      }
-      return withContext(context, () => children(null as never));
-    };
-  }
-
-  if (fn.name) {
-    Object.defineProperty(GsxContextProvider, "name", {
-      value: `GsxContextProvider[${fn.name}]`,
-    });
-  }
-
-  const component = GsxContextProvider;
   return component;
 }

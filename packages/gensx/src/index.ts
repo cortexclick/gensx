@@ -1,16 +1,30 @@
-import { Component, ContextProvider, StreamComponent } from "./component";
-import { withContext } from "./context";
-import { execute } from "./resolve";
+export { Component, StreamComponent } from "./component";
+export { createContext, useContext } from "./context";
+export { execute } from "./resolve";
+export { Fragment, jsx, jsxs } from "./jsx-runtime";
+export type { JSX } from "./jsx-runtime";
+export type {
+  ComponentProps,
+  Context,
+  ExecutableValue,
+  MaybePromise,
+  Streamable,
+  StreamComponentProps,
+  StreamingComponent,
+  WorkflowComponent,
+} from "./types";
 
-export * from "./component";
-export * from "./context";
-export * from "./jsx-runtime";
-export * from "./types";
+// Re-export as gsx for backward compatibility
+import { Component, StreamComponent } from "./component";
+import { createContext, useContext } from "./context";
+import * as jsxRuntime from "./jsx-runtime";
+import { execute } from "./resolve";
 
 export const gsx = {
   Component,
-  Provider: ContextProvider,
   StreamComponent,
-  withContext,
+  createContext,
   execute,
+  useContext,
+  "jsx-runtime": jsxRuntime,
 };

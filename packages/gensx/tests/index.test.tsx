@@ -1,5 +1,7 @@
 import { setTimeout } from "timers/promises";
 
+import { expect, suite, test } from "vitest";
+
 import { gsx } from "@/index";
 
 suite("gensx", () => {

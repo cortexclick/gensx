@@ -1,5 +1,7 @@
 import { setTimeout } from "timers/promises";
 
+import { expect, suite, test } from "vitest";
+
 import { gsx, Streamable } from "@/index";
 
 async function* stream(foo: string) {

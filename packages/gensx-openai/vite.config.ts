@@ -7,7 +7,7 @@ export default defineConfig(({ command }) => ({
   build: {
     sourcemap: true,
     lib: {
-      entry: resolve(__dirname, "src/index.ts"),
+      entry: resolve(__dirname, "src/index.tsx"),
       formats: ["es"],
       fileName: () => "index.js",
     },
@@ -15,6 +15,11 @@ export default defineConfig(({ command }) => ({
       external: (id) => !id.startsWith(".") && !id.startsWith("/"),
     },
     watch: command === "serve" ? {} : undefined,
+  },
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "./src"),
+    },
   },
   plugins: [
     dts({

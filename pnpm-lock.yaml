@@ -261,8 +261,8 @@ importers:
         specifier: workspace:*
         version: link:../gensx
       openai:
-        specifier: ^4.71.1
-        version: 4.77.0(zod@3.24.1)
+        specifier: ^4.77
+        version: 4.77.4(zod@3.24.1)
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
@@ -3316,6 +3316,15 @@ packages:
 
   openai@4.77.0:
     resolution: {integrity: sha512-WWacavtns/7pCUkOWvQIjyOfcdr9X+9n9Vvb0zFeKVDAqwCMDHB+iSr24SVaBAhplvSG6JrRXFpcNM9gWhOGIw==}
+    hasBin: true
+    peerDependencies:
+      zod: ^3.23.8
+    peerDependenciesMeta:
+      zod:
+        optional: true
+
+  openai@4.77.4:
+    resolution: {integrity: sha512-rShjKsZ/HXm1cSxXt6iFeZxiCohrVShawt0aRRQmbb+z/EXcH4OouyQZP1ShyZMb63LJajpl8aGw3DzEi8Wh9Q==}
     hasBin: true
     peerDependencies:
       zod: ^3.23.8
@@ -8161,6 +8170,20 @@ snapshots:
       regex-recursion: 5.1.1
 
   openai@4.77.0(zod@3.24.1):
+    dependencies:
+      '@types/node': 18.19.68
+      '@types/node-fetch': 2.6.12
+      abort-controller: 3.0.0
+      agentkeepalive: 4.6.0
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      node-fetch: 2.7.0
+    optionalDependencies:
+      zod: 3.24.1
+    transitivePeerDependencies:
+      - encoding
+
+  openai@4.77.4(zod@3.24.1):
     dependencies:
       '@types/node': 18.19.68
       '@types/node-fetch': 2.6.12

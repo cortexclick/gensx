@@ -37,7 +37,6 @@ export const jsx = <
 ): (() => Promise<Awaited<TOutput> | Awaited<TOutput>[]>) => {
   // Return a promise that will be handled by execute()
   async function JsxWrapper(): Promise<Awaited<TOutput> | Awaited<TOutput>[]> {
-    // Execute component
     const rawResult = await component(props ?? ({} as TProps));
 
     // For non-streaming results, resolve deeply but preserve streamables

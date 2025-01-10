@@ -14,7 +14,8 @@
     "build": "vite build",
     "clean": "rm -rf dist",
     "dev": "vite build --watch",
-    "test": "vitest",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
