@@ -1,24 +1,44 @@
+
 // Platform-agnostic file operations
-async function writeFileSafe(path: string, data: string): Promise<void> {
+async function writeFileSafe(filePath: string, data: string): Promise<void> {
+
   const isNode =
     typeof process !== "undefined" && process.versions.node != null;
 
   if (isNode) {
-    // Node.js environment
-    try {
-      const { writeFile } = await import("fs/promises");
-      await writeFile(path, data);
-    } catch (error) {
-      console.error(`[Tracker] Failed to write file:`, { path, error });
-      throw error;
+    const errors: Error[] = [];
+  // 1) Attempt to send data to the remote API
+  try {
+    const response = await fetch('http://localhost:3000/api/execution', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: data
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to send execution data: ${response.status}`);
     }
-  } else {
-    // Browser environment - could implement browser-specific storage here
-    console.warn(
-      "[Tracker] File writing is not supported in browser environment",
-    );
+  } catch (error) {
+    errors.push(error as Error);
   }
-}
+
+  try {
+    const { writeFile } = await import("fs/promises");
+    await writeFile(filePath, data);
+  } catch (error) {
+    console.error(`[Tracker] Failed to write file:`, { filePath, error });
+      throw error;
+  }
+
+  // 3) If *both* operations failed, throw an error
+  if (errors.length === 2) {
+      throw new Error('Failed to write file and send data: ' + errors.map(e => e.message).join('; '));
+    }
+  }
+} 
+
 
 // Cross-platform UUID generation
 async function generateUUID(): Promise<string> {

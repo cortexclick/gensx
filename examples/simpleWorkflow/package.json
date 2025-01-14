@@ -1,0 +1,32 @@
+{
+  "name": "@gensx-examples/simple",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "nodemon",
+    "run": "NODE_OPTIONS='--enable-source-maps' tsx ./index.tsx",
+    "build": "tsx build.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "NODE_OPTIONS='--enable-source-maps' tsx ./index.tsx",
+    "start": "node dist/hn.js"
+  },
+  "dependencies": {
+    "@gensx/openai": "workspace:*",
+    "axios": "^1.7.9",
+    "gensx": "workspace:*",
+    "openai": "^4.77.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.11",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.0.0",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.0.0"
+  }
+}

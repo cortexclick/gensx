@@ -1,0 +1,6 @@
+{
+  "watch": [".", ".env"],
+  "exec": "NODE_OPTIONS='--enable-source-maps' tsx --inspect=0.0.0.0:9229 ./index.tsx",
+  "ext": "ts, tsx, js, json",
+  "ignore": ["execution.json"]
+}
