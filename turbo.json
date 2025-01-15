@@ -22,7 +22,13 @@
     "test": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"],
-      "inputs": ["src/**/*.tsx", "src/**/*.ts", "test/**/*.ts", "test/**/*.tsx"]
+      "inputs": [
+        "src/**/*.tsx",
+        "src/**/*.ts",
+        "test/**/*.ts",
+        "test/**/*.tsx"
+      ],
+      "env": ["OPENAI_API_KEY", "FIRECRAWL_API_KEY"]
     },
     "lint:fix": {
       "dependsOn": ["^build"],

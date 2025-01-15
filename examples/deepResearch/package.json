@@ -1,0 +1,34 @@
+{
+  "name": "@gensx-examples/deep-research",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "nodemon",
+    "run": "NODE_OPTIONS='--enable-source-maps' tsx ./index.tsx",
+    "build": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "NODE_OPTIONS='--enable-source-maps' tsx ./index.tsx"
+  },
+  "dependencies": {
+    "@gensx/openai": "workspace:*",
+    "@mendable/firecrawl-js": "^1.12.0",
+    "@types/node-fetch": "^2.6.12",
+    "gensx": "workspace:*",
+    "node-fetch": "^3.3.2",
+    "openai": "^4.77.0",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.11",
+    "@types/xml2js": "^0.4.14",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.0.0"
+  }
+}
