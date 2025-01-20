@@ -1,5 +1,13 @@
-import { ChatCompletion, OpenAIProvider } from "@gensx/openai";
 import { gsx } from "gensx";
+
+import {
+  ChatCompletion as OpenAIChatCompletion,
+  Provider as OpenAIProvider,
+} from "./openai.js";
+import {
+  ChatCompletion as PplxChatCompletion,
+  Provider as PplxProvider,
+} from "./perplexity.js";
 
 interface LLMResearchBrainstormProps {
   prompt: string;
@@ -16,7 +24,7 @@ const LLMResearchBrainstorm = gsx.Component<
 
 Here is an example of the JSON output: { "topics": ["topic 1", "topic 2", "topic 3"] }`;
   return (
-    <ChatCompletion
+    <OpenAIChatCompletion
       model="gpt-4o-mini"
       temperature={0.5}
       messages={[
@@ -30,7 +38,7 @@ Here is an example of the JSON output: { "topics": ["topic 1", "topic 2", "topic
         (completion: string | null) =>
           JSON.parse(completion ?? '{ "topics": [] }')
       }
-    </ChatCompletion>
+    </OpenAIChatCompletion>
   );
 });
 
@@ -45,7 +53,7 @@ const LLMResearch = gsx.Component<LLMResearchProps, LLMResearchOutput>(
     const systemPrompt = `You are a helpful assistant that researches topics. The user will provide a topic and you will research the topic. You should return a summary of the research, summarizing the most important points in a few sentences at most.`;
 
     return (
-      <ChatCompletion
+      <OpenAIChatCompletion
         model="gpt-4o-mini"
         temperature={0}
         messages={[
@@ -71,7 +79,7 @@ Here is the research for the blog post: ${research.join("\n")}`;
 
     console.log("🚀 Writing blog post for:", { prompt, research });
     return (
-      <ChatCompletion
+      <OpenAIChatCompletion
         model="gpt-4o-mini"
         temperature={0}
         messages={[
@@ -93,7 +101,7 @@ const LLMEditor = gsx.StreamComponent<LLMEditorProps>(
     const systemPrompt = `You are a helpful assistant that edits blog posts. The user will provide a draft and you will edit it to make it more engaging and interesting.`;
 
     return (
-      <ChatCompletion
+      <OpenAIChatCompletion
         stream={true}
         model="gpt-4o-mini"
         temperature={0}
@@ -109,21 +117,27 @@ const LLMEditor = gsx.StreamComponent<LLMEditorProps>(
 interface WebResearcherProps {
   prompt: string;
 }
-type WebResearcherOutput = string[];
-export const WebResearcher = gsx.Component<
-  WebResearcherProps,
-  WebResearcherOutput
->("WebResearcher", async ({ prompt }) => {
+type WebResearcherOutput = string;
+function WebResearcher({
+  prompt,
+}: gsx.Args<WebResearcherProps, WebResearcherOutput>) {
   console.log("🌐 Researching web for:", prompt);
-  const results = await Promise.resolve([
-    "web result 1",
-    "web result 2",
-    "web result 3",
-  ]);
-  return results;
-});
+  const systemPrompt =
+    "You are an AI research assistant. Your job is to find relevant online information and provide detailed answers. A user will enter a prompt and you should respond with a brief research report on the topic.";
 
-type ParallelResearchOutput = [string[], string[]];
+  return (
+    <PplxChatCompletion
+      model="llama-3.1-sonar-small-128k-online"
+      temperature={0}
+      messages={[
+        { role: "system", content: systemPrompt },
+        { role: "user", content: prompt },
+      ]}
+    />
+  );
+}
+
+type ParallelResearchOutput = [string[], string];
 interface ParallelResearchComponentProps {
   prompt: string;
 }
@@ -151,14 +165,16 @@ export const BlogWritingWorkflow =
     "BlogWritingWorkflow",
     ({ prompt }) => {
       return (
-        <OpenAIProvider apiKey={process.env.OPENAI_API_KEY}>
-          <ParallelResearch prompt={prompt}>
-            {(research) => (
-              <LLMWriter prompt={prompt} research={research.flat()}>
-                {(draft) => <LLMEditor draft={draft} stream={true} />}
-              </LLMWriter>
-            )}
-          </ParallelResearch>
+        <OpenAIProvider>
+          <PplxProvider>
+            <ParallelResearch prompt={prompt}>
+              {(research) => (
+                <LLMWriter prompt={prompt} research={research.flat()}>
+                  {(draft) => <LLMEditor draft={draft} stream={true} />}
+                </LLMWriter>
+              )}
+            </ParallelResearch>
+          </PplxProvider>
         </OpenAIProvider>
       );
     },

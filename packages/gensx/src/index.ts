@@ -11,6 +11,8 @@ export type {
   StreamArgs,
   GsxStreamComponent,
   GsxComponent,
+  ExecutionContext,
+  ContextProvider,
 } from "./types";
 
 import { Component, StreamComponent } from "./component";
@@ -22,6 +24,9 @@ import * as types from "./types";
 export namespace gsx {
   export type Args<P, O> = types.Args<P, O>;
   export type StreamArgs<P> = types.StreamArgs<P>;
+  export type ExecutionContext = types.ExecutionContext;
+  export type Context<T> = types.Context<T>;
+  export type ContextProvider<T> = types.ContextProvider<T>;
 }
 
 export const gsx = {

@@ -1,9 +1,15 @@
-import { ExecutionContext } from "./context";
 import { JSX } from "./jsx-runtime";
 
 export type MaybePromise<T> = T | Promise<T>;
 
 export type Element = JSX.Element;
+
+export type WorkflowContext = Record<symbol, unknown>;
+
+export interface ExecutionContext {
+  withContext(newContext: Partial<WorkflowContext>): ExecutionContext;
+  get<K extends keyof WorkflowContext>(key: K): WorkflowContext[K] | undefined;
+}
 
 export type Primitive = string | number | boolean | null | undefined;
 
@@ -88,9 +94,11 @@ export type StreamArgs<P> = P & {
     | ((output: Streamable) => Promise<void>);
 };
 
+export type ContextProvider<T> = GsxComponent<{ value: T }, ExecutionContext>;
+
 export interface Context<T> {
   readonly __type: "Context";
   readonly defaultValue: T;
   readonly symbol: symbol;
-  Provider: GsxComponent<{ value: T }, ExecutionContext>;
+  Provider: ContextProvider<T>;
 }
