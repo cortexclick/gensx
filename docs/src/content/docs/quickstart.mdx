@@ -160,27 +160,28 @@ In this example, the `Research` component gathers information about the topic wh
 
 One common challenge with LLM workflows is handling streaming responses. Any given LLM call can return a response as a string or as a stream of tokens. Typically you'll want the last component of your workflow to stream the response.
 
-To take advantage of streaming, all you need to do is update the `Writer` component to use `StreamingComponent` and pass `stream={true}` when you invoke it.
+To take advantage of streaming, all you need to do is update the `Writer` component to use `StreamComponent` and pass `stream={true}` when you invoke it.
 
 ```tsx
-const Writer = gsx.StreamingComponent<
-  { topic: string; research: string },
-  string
->("Writer", async ({ topic, research }) => {
-  return (
-    <ChatCompletion
-      model="gpt-4o-mini"
-      messages={[
-        {
-          role: "system",
-          content:
-            "You are a content writer. Use the research provided to write a blog post about the topic.",
-        },
-        { role: "user", content: `Topic: ${topic}\nResearch: ${research}` },
-      ]}
-    />
-  );
-});
+const Writer = gsx.StreamComponent<{ topic: string; research: string }, string>(
+  "Writer",
+  async ({ topic, research }) => {
+    return (
+      <ChatCompletion
+        stream={true}
+        model="gpt-4o-mini"
+        messages={[
+          {
+            role: "system",
+            content:
+              "You are a content writer. Use the research provided to write a blog post about the topic.",
+          },
+          { role: "user", content: `Topic: ${topic}\nResearch: ${research}` },
+        ]}
+      />
+    );
+  },
+);
 
 const stream = await gsx.execute<Streamable>(
   <OpenAIProvider apiKey={process.env.OPENAI_API_KEY}>

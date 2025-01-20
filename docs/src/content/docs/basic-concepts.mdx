@@ -99,9 +99,9 @@ While GenSX uses a [tree-based structure with JSX](https://gensx.dev/why-jsx/#gr
 GenSX provides two main types of components:
 
 1. **Components** (`gsx.Component`) - Components that produce an output value and can handle both synchronous and asynchronous operations
-2. **Streaming Components** (`gsx.StreamingComponent`) - Components designed to handle responses from LLMs, working in both streaming and non-streaming contexts
+2. **Streaming Components** (`gsx.StreamComponent`) - Components designed to handle responses from LLMs, working in both streaming and non-streaming contexts
 
-The power of a `StreamingComponent` is that a single implementation can be used interchangeably in both streaming and non-streaming contexts without any code changes - you just toggle the `stream` prop:
+The power of a `StreamComponent` is that a single implementation can be used interchangeably in both streaming and non-streaming contexts without any code changes - you just toggle the `stream` prop:
 
 ```tsx
 const stream = await gsx.execute<Streamable>(
