@@ -31,15 +31,15 @@
   "license": "Apache-2.0",
   "peerDependencies": {
     "gensx": ">=0.2.1",
-    "openai": "^4.77"
+    "openai": "^4.79"
   },
   "devDependencies": {
-    "@types/node": "^20.17.11",
+    "@types/node": "^20.17.14",
     "@vitest/coverage-istanbul": "^2.1.8",
     "gensx": "workspace:*",
-    "openai": "^4.77",
-    "typescript": "^5.7.2",
-    "vite": "^6.0.6",
+    "openai": "^4.79",
+    "typescript": "^5.7.3",
+    "vite": "^5.4.12",
     "vite-plugin-dts": "^4.5.0",
     "vitest": "^2.1.8"
   },
