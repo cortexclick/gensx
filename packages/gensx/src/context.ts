@@ -1,5 +1,10 @@
 import { resolveDeep } from "./resolve";
 import { Args, Context } from "./types";
+import {
+  createWorkflowContext,
+  WORKFLOW_CONTEXT_SYMBOL,
+  WorkflowExecutionContext,
+} from "./workflow-context";
 
 type WorkflowContext = Record<symbol, unknown>;
 
@@ -55,7 +60,11 @@ export class ExecutionContext {
   constructor(
     public context: WorkflowContext,
     private parent?: ExecutionContext,
-  ) {}
+  ) {
+    if (!this.context[WORKFLOW_CONTEXT_SYMBOL]) {
+      this.context[WORKFLOW_CONTEXT_SYMBOL] = createWorkflowContext();
+    }
+  }
 
   withContext(newContext: Partial<WorkflowContext>): ExecutionContext {
     if (Object.getOwnPropertySymbols(newContext).length === 0) {
@@ -79,6 +88,10 @@ export class ExecutionContext {
       return this.context[key];
     }
     return this.parent?.get(key);
+  }
+
+  getWorkflowContext(): WorkflowExecutionContext {
+    return this.get(WORKFLOW_CONTEXT_SYMBOL) as WorkflowExecutionContext;
   }
 }
 

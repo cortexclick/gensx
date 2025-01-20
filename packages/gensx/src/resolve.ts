@@ -1,4 +1,4 @@
-import { ExecutionContext } from "./context";
+import { ExecutionContext, getCurrentContext } from "./context";
 import { isStreamable } from "./stream";
 import { ExecutableValue } from "./types";
 
@@ -53,5 +53,8 @@ export async function resolveDeep<T>(value: unknown): Promise<T> {
  * This is the main entry point for executing workflow components.
  */
 export async function execute<T>(element: ExecutableValue): Promise<T> {
-  return (await resolveDeep(element)) as T;
+  const context = getCurrentContext().getWorkflowContext();
+  const result = (await resolveDeep(element)) as T;
+  context.checkpointManager.write();
+  return result;
 }

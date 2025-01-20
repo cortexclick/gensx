@@ -112,7 +112,7 @@ export async function getFullStory(id: number): Promise<HNStory | null> {
 
 export async function getTopStoryDetails(
   limit = 500,
-  batchSize = 10,
+  batchSize = 50,
 ): Promise<HNStory[]> {
   const storyIds = await getTopStories(limit);
   const stories: HNStory[] = [];
@@ -126,7 +126,7 @@ export async function getTopStoryDetails(
 
     // Small delay between batches
     if (i + batchSize < storyIds.length) {
-      await new Promise((resolve) => setTimeout(resolve, 250));
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
   }
 
