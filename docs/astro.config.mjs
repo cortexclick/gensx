@@ -55,10 +55,10 @@ export default defineConfig({
         //   label: "LLM patterns",
         //   autogenerate: { directory: "patterns" },
         // },
-        // {
-        //   label: "Examples",
-        //   autogenerate: { directory: "examples" },
-        // },
+        {
+          label: "Examples",
+          autogenerate: { directory: "examples" },
+        },
         // {
         //   label: "Component reference",
         //   autogenerate: { directory: "component-reference" },

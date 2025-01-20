@@ -1,14 +1,89 @@
 ---
-title: Blog writing
+title: Blog Writer
 description: Blog writing agent with Perplexity and GenSX
 sidebar:
   order: 2
 ---
 
-GenSX is a simple framework for building complex generative AI and LLM workflows - think agents, chatbot APIs, RAG, reflection, and more.
+The [Blog Writer example](https://github.com/cortexclick/gensx/tree/main/examples/blogWriter) demonstrates how to create a multi-step blog writing workflow using GenSX. It combines research, content generation, and editing to create a polished blog post based on a prompt.
 
-It uses `jsx` to define and orchestrate workflows with functional, reusable components:
+## Workflow
+
+The Blog Writer workflow consists of the following steps:
+
+1. Parallel research phase:
+   - Brainstorm topics using LLM (`<LLMResearchBrainstorm>`)
+   - Research each topic in detail (`<LLMResearch>`)
+   - Gather web research (`<WebResearcher>`)
+2. Write initial draft based on research (`<LLMWriter>`)
+3. Edit and polish the content (`<LLMEditor>`)
+
+## Running the example
+
+```bash
+# Install dependencies
+pnpm install
+
+# Set your OpenAI API key
+export OPENAI_API_KEY=<your_api_key>
+
+# Run the example
+pnpm run run
+```
+
+## Key patterns
+
+### Running components in parallel
+
+The `<ParallelResearch>` component runs both the `LLMResearchBrainstorm` and `WebResearcher` components in parallel. Both sub-workflows return an array of strings which are automatically combined into a single array.
 
 ```tsx
-
+const ParallelResearch = gsx.Component<
+  ParallelResearchComponentProps,
+  ParallelResearchOutput
+>("ParallelResearch", ({ prompt }) => {
+  return (
+    <>
+      <LLMResearchBrainstorm prompt={prompt}>
+        {({ topics }) => {
+          return topics.map((topic) => <LLMResearch topic={topic} />);
+        }}
+      </LLMResearchBrainstorm>
+      <WebResearcher prompt={prompt} />
+    </>
+  );
+});
 ```
+
+### Streaming Output
+
+The workflow also shows how to stream back the final output with GenSX. The `<LLMEditor>` component is a `StreamComponent` and the `<ChatCompletion>` component has `stream={true}`.
+
+```tsx
+const LLMEditor = gsx.StreamComponent<LLMEditorProps>(
+  "LLMEditor",
+  ({ draft }) => {
+    return (
+      <ChatCompletion
+        stream={true}
+        model="gpt-4o-mini"
+        temperature={0}
+        messages={[
+          { role: "system", content: systemPrompt },
+          { role: "user", content: draft },
+        ]}
+      />
+    );
+  },
+);
+```
+
+Then when the component is invoked, `stream={true}` is passed to the component so that the output is streamed back and can be surfaced to the user:
+
+```tsx
+<LLMEditor draft={draft} stream={true} />
+```
+
+## Additional resources
+
+Check out the other GenSX examples in the [Github Repo](https://github.com/cortexclick/gensx).

@@ -1,14 +1,87 @@
 ---
-title: Hacker News sentiment analysis
-description: Analyzing Hacker News sentiment with GenSX
+title: Hacker News Analyzer
+description: Extract out key trends from top Hacker News posts
 sidebar:
   order: 1
 ---
 
-GenSX is a simple framework for building complex generative AI and LLM workflows.
+The [Hacker News Analyzer](https://github.com/cortexclick/gensx/tree/main/examples/hackerNewsAnalyzer) example uses GenSX to fetch, analyze, and extract trends from the top Hacker News posts. It shows how to combine data fetching, parallel analysis, and content generation in a single workflow to create two outputs: a detailed report and a tweet of the trends.
 
-It uses `jsx` to define and orchestrate workflows with functional, reusable components:
+## Workflow
+
+The Hacker News Analyzer workflow is composed of the following steps:
+
+1. Fetch the top 500 Hacker News posts (`<HnCollector>`)
+2. Process each post in parallel (`<AnalyzeHNPosts>`)
+   a. Summarize the content (`<PostSummarizer>`)
+   b. Analyze the comments (`<CommentsAnalyzer>`)
+3. Writes a detailed report identifying the key trends across all posts (`<TrendsAnalyzer>`)
+4. Edits the report into the style of Paul Graham (`<PGEditor>`)
+5. Generates a tweet in the voice of Paul Graham (`<PGTweetWriter>`)
+
+## Running the example
+
+```bash
+# Install dependencies
+pnpm install
+
+# Set your OpenAI API key
+export OPENAI_API_KEY=<your_api_key>
+
+# Run the example
+pnpm run run
+```
+
+The workflow will create two files:
+
+- `hn_analysis_report.md`: A detailed analysis report
+- `hn_analysis_tweet.txt`: A tweet-sized summary of the analysis
+
+## Key patterns
+
+### Parallel processing
+
+The workflow uses the `<AnalyzeHNPosts>` component to process each post in parallel. To do this, it takes advantage of the ability to have components return arrays and structured objects containing other components.
+
+This component takes a list of stories and returns a list of `analyses` with each containing a summary and a comment analysis for the post.
 
 ```tsx
-
+const AnalyzeHNPosts = gsx.Component<AnalyzeHNPostsProps, AnalyzeHNPostsOutput>(
+  "AnalyzeHNPosts",
+  ({ stories }) => {
+    return {
+      analyses: stories.map((story) => ({
+        summary: <PostSummarizer story={story} />,
+        commentAnalysis: (
+          <CommentsAnalyzer postId={story.id} comments={story.comments} />
+        ),
+      })),
+    };
+  },
+);
 ```
+
+### Multiple outputs
+
+This example also shows a simple pattern returning multiple outputs from a workflow. In this case, both the outputs of `<TrendAnalyzer>` and `<PGTweetWriter>` are returned as a single object. This is done by leveraging the the child function of `<PGEditor>` to combine the outputs of multiple components into a single object.
+
+```tsx
+<TrendAnalyzer analyses={analyses}>
+  {(report) => (
+    <PGEditor content={report}>
+      {(editedReport) => (
+        <PGTweetWriter
+          context={editedReport}
+          prompt="Summarize the HN trends in a tweet"
+        >
+          {(tweet) => ({ report: editedReport, tweet })}
+        </PGTweetWriter>
+      )}
+    </PGEditor>
+  )}
+</TrendAnalyzer>
+```
+
+## Additional resources
+
+Check out the other GenSX examples in the [Github Repo](https://github.com/cortexclick/gensx).
