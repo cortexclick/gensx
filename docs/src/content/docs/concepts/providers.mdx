@@ -1,14 +1,96 @@
 ---
 title: Providers
-description: GenSX architecture and design goals
+description: Learn how to manage API keys and configuration dependencies in GenSX using providers
 sidebar:
   order: 3
 ---
 
-GenSX is a simple framework for building complex generative AI and LLM workflows.
+Providers are a specialized use of [contexts](../contexts) that focus on managing configuration and dependencies for your workflow. They're built using the context system described above, but provide a more focused API for configuration management.
 
-It uses `jsx` to define and orchestrate workflows with functional, reusable components:
+The main provider available today is the `OpenAIProvider`, which manages your OpenAI API key:
 
 ```tsx
+const result = await gsx.execute(
+  <OpenAIProvider apiKey={process.env.OPENAI_API_KEY}>
+    <ChatCompletion
+      model="gpt-4o-mini"
+      messages={[{ role: "user", content: "Hello!" }]}
+    />
+  </OpenAIProvider>,
+);
+```
 
+Providers offer several benefits:
+
+- Manage complex configuration like API clients and settings
+- Provide a simpler, more focused API than raw contexts
+- Keep configuration separate from business logic
+- Enable dependency injection for testing and development
+
+## Creating a Provider
+
+If you want to use a provide that isn't available out of the box, you can easily create your own. The example below shows how to create a provider for the [Firecrawl](https://www.firecrawl.dev/) API.
+
+Start by importing `gsx` and the package you want to use:
+
+```tsx
+import { gsx } from "gensx";
+import FirecrawlApp, { FirecrawlAppConfig } from "@mendable/firecrawl-js";
+```
+
+Next, create a context and then the provider:
+
+```tsx
+// Create a context
+export const FirecrawlContext = gsx.createContext<{
+  client?: FirecrawlApp;
+}>({});
+
+// Create the provider
+export const FirecrawlProvider = gsx.Component<FirecrawlAppConfig, never>(
+  "FirecrawlProvider",
+  (args: FirecrawlAppConfig) => {
+    const client = new FirecrawlApp({
+      apiKey: args.apiKey,
+    });
+    return <FirecrawlContext.Provider value={{ client }} />;
+  },
+);
+```
+
+Finally, you can build components that use the provider.
+
+```tsx
+export const ScrapePage = gsx.Component<ScrapePageProps, string>(
+  "ScrapePage",
+  async ({ url }) => {
+    const context = gsx.useContext(FirecrawlContext);
+
+    if (!context.client) {
+      throw new Error(
+        "Firecrawl client not found. Please wrap your component with FirecrawlProvider.",
+      );
+    }
+    const result = await context.client.scrapeUrl(url, {
+      formats: ["markdown"],
+      timeout: 30000,
+    });
+
+    if (!result.success || !result.markdown) {
+      throw new Error(`Failed to scrape url: ${url}`);
+    }
+
+    return result.markdown;
+  },
+);
+```
+
+To use the `FirecrawlProvider` and `ScrapePage` component, you would then do the following:
+
+```tsx
+const markdown = await gsx.execute(
+  <FirecrawlProvider apiKey={process.env.FIRECRAWL_API_KEY}>
+    <ScrapePage url="https://gensx.dev/overview/" />
+  </FirecrawlProvider>,
+);
 ```
