@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.1.3](https://github.com/cortexclick/gensx/compare/gensx-openai-v0.1.2...gensx-openai-v0.1.3) (2025-01-20)
+
+
+### ✨ New Features
+
+* Add support for component names ([#120](https://github.com/cortexclick/gensx/issues/120)) ([cc5d69c](https://github.com/cortexclick/gensx/commit/cc5d69c7c3d39f60ea85db351e445a6b1d3ef47b))
+* Implement `createContext` and `useContext` ([#90](https://github.com/cortexclick/gensx/issues/90)) ([4c30f67](https://github.com/cortexclick/gensx/commit/4c30f6726c680fdabcf62734eed5035b618b2b17)), closes [#89](https://github.com/cortexclick/gensx/issues/89)
+
+
+### 🐛 Bug Fixes
+
+* Update vite-plugin-dts. ([#122](https://github.com/cortexclick/gensx/issues/122)) ([b831a67](https://github.com/cortexclick/gensx/commit/b831a670d43b2b089847c8fd244fcd178a2b2afc))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * gensx bumped to 0.2.3
+  * peerDependencies
+    * gensx bumped from >=0.2.1 to >=0.2.3
+
 ## [0.1.2](https://github.com/cortexclick/gensx/compare/gensx-openai-v0.1.1...gensx-openai-v0.1.2) (2025-01-11)
 
 
