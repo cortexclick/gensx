@@ -59,10 +59,10 @@ export default defineConfig({
         //   label: "Examples",
         //   autogenerate: { directory: "examples" },
         // },
-        // {
-        //   label: "Component reference",
-        //   autogenerate: { directory: "component-reference" },
-        // },
+        {
+          label: "Component reference",
+          autogenerate: { directory: "component-reference" },
+        },
       ],
     }),
     tailwind({

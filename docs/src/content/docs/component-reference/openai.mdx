@@ -1,14 +1,76 @@
 ---
-title: OpenAI component
+title: OpenAI components
 description: OpenAI API compatible component reference
 sidebar:
   order: 1
 ---
 
-GenSX is a simple framework for building complex generative AI and LLM workflows.
+The [@gensx/openai](https://www.npmjs.com/package/@gensx/openai) package provides OpenAI API compatible components for GenSX.
 
-It uses `jsx` to define and orchestrate workflows with functional, reusable components:
+## Installation
+
+To install the package, run the following command:
+
+```bash
+npm install @gensx/openai
+```
+
+## Supported components
+
+| <div style="width:150px">Component</div> | Description                                                                                |
+| :--------------------------------------- | :----------------------------------------------------------------------------------------- |
+| [`OpenAIProvider`](#openai-provider)     | OpenAI Provider that handles configuration and authentication for child components         |
+| [`ChatCompletion`](#chat-completion)     | Component for making chat completions with OpenAI's models (`gpt-4o`, `gpt-4o-mini`, etc.) |
+
+## Reference
+
+#### `<OpenAIProvider />`
+
+The `OpenAIProvider` component initializes and provides an OpenAI client instance to all child components. Any components that use OpenAI's API need to be wrapped in an `OpenAIProvider`.
 
 ```tsx
+import { OpenAIProvider } from "@gensx/openai";
 
+<OpenAIProvider
+  apiKey="your-api-key" // Your OpenAI API key
+  organization="org-id" // Optional: Your OpenAI organization ID
+  baseURL="https://api.openai.com/v1" // Optional: API base URL
+/>;
 ```
+
+##### Props
+
+The `OpenAIProvider` accepts all configuration options from the [OpenAI Node.js client library](https://github.com/openai/openai-node) including:
+
+- `apiKey` (required): Your OpenAI API key
+- `organization`: Optional organization ID
+- `baseURL`: Optional API base URL
+
+#### `<ChatCompletion />`
+
+The `ChatCompletion` component creates chat completions using OpenAI's chat models. It must be used within an `OpenAIProvider`.
+
+```tsx
+import { ChatCompletion } from "@gensx/openai";
+
+<ChatCompletion
+  model="gpt-4o"
+  messages={[
+    { role: "system", content: "You are a helpful assistant." },
+    { role: "user", content: "What's a programmable tree?" },
+  ]}
+  temperature={0.7}
+  stream={true}
+/>;
+```
+
+##### Props
+
+The `ChatCompletion` component accepts all parameters from OpenAI's [chat completion API](https://platform.openai.com/docs/api-reference/chat/create) including:
+
+- `model` (required): ID of the model to use (e.g., `"gpt-4o"`, `"gpt-4o-mini"`)
+- `messages` (required): Array of messages in the conversation
+- `temperature`: Sampling temperature (0-2)
+- `stream`: Whether to stream the response
+- `maxTokens`: Maximum number of tokens to generate
+- `responseFormat`: Format of the response (example: `{ "type": "json_object" }`)
