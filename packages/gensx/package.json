@@ -44,6 +44,7 @@
   "devDependencies": {
     "@types/node": "^20.17.11",
     "@vitest/coverage-istanbul": "^2.1.8",
+    "openai": "4.77.0",
     "typescript": "^5.7.2",
     "vite": "^6.0.6",
     "vite-plugin-dts": "^4.5.0",
@@ -51,5 +52,11 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "peerDependencies": {
+    "openai": "^4.77.0"
   }
 }

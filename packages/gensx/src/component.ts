@@ -1,5 +1,6 @@
 import type {
   DeepJSXElement,
+  ExecutableValue,
   GsxComponent,
   GsxStreamComponent,
   MaybePromise,
@@ -58,11 +59,11 @@ export function Component<P, O>(
   return GsxComponent;
 }
 
-export function StreamComponent<P>(
+export function StreamComponent<P, R = Streamable>(
   name: string,
-  fn: (props: P) => MaybePromise<Streamable | JSX.Element>,
-): GsxStreamComponent<P> {
-  const GsxStreamComponent: GsxStreamComponent<P> = async props => {
+  fn: (props: P) => MaybePromise<DeepJSXElement<R> | ExecutableValue>,
+): GsxStreamComponent<P, R> {
+  const GsxStreamComponent: GsxStreamComponent<P, R> = async props => {
     const context = getCurrentContext();
     const workflowContext = context.getWorkflowContext();
     const { checkpointManager } = workflowContext;
@@ -79,9 +80,17 @@ export function StreamComponent<P>(
     );
 
     try {
-      const iterator: Streamable = await context.withCurrentNode(nodeId, () =>
+      const output = await context.withCurrentNode(nodeId, () =>
         resolveDeep(fn(props)),
       );
+
+      // Handle non-iterable results (like ChatResponse)
+      if (!output || !isAsyncIterable(output)) {
+        checkpointManager.completeNode(nodeId, output);
+        return output;
+      }
+
+      const iterator = output as Streamable;
 
       if (props.stream) {
         // Mark as streaming immediately
@@ -92,7 +101,11 @@ export function StreamComponent<P>(
           let accumulated = "";
           try {
             for await (const token of iterator) {
-              accumulated += token;
+              if (typeof token === "string") {
+                accumulated += token;
+              } else {
+                accumulated = JSON.stringify(token);
+              }
               yield token;
             }
             // Update with final content if stream completes
@@ -117,12 +130,16 @@ export function StreamComponent<P>(
       }
 
       // Non-streaming case - accumulate all output then checkpoint
-      let result = "";
+      let accumulated = "";
       for await (const token of iterator) {
-        result += token;
+        if (typeof token === "string") {
+          accumulated += token;
+        } else {
+          accumulated = JSON.stringify(token);
+        }
       }
-      checkpointManager.completeNode(nodeId, result);
-      return result;
+      checkpointManager.completeNode(nodeId, accumulated);
+      return accumulated;
     } catch (error) {
       // Record error in checkpoint
       if (error instanceof Error) {
@@ -141,4 +158,10 @@ export function StreamComponent<P>(
 
   const component = GsxStreamComponent;
   return component;
+}
+
+function isAsyncIterable(value: unknown): value is AsyncIterable<unknown> {
+  return (
+    typeof value === "object" && value !== null && Symbol.asyncIterator in value
+  );
 }

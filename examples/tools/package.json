@@ -1,0 +1,28 @@
+{
+  "name": "@gensx-examples/tools",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "nodemon",
+    "start": "NODE_OPTIONS='--enable-source-maps' tsx ./index.tsx",
+    "build": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@gensx/openai": "workspace:*",
+    "gensx": "workspace:*",
+    "openai": "^4.77.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.11",
+    "nodemon": "^3.1.9",
+    "tsx": "^4.19.2",
+    "typescript": "^5.0.0"
+  }
+}

@@ -114,12 +114,16 @@ suite("ChatCompletion", () => {
       </OpenAIProvider>,
     );
 
-    let resultString = "";
+    let accumulated = "";
     for await (const chunk of result) {
-      resultString += chunk;
+      if (typeof chunk === "string") {
+        accumulated += chunk;
+      } else {
+        accumulated += JSON.stringify(chunk);
+      }
     }
 
-    expect(resultString).toBe("Hello World ");
+    expect(accumulated).toBe("Hello World ");
   });
 
   test("handles non-streaming response", async () => {

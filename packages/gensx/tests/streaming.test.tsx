@@ -123,7 +123,11 @@ suite("streaming", () => {
           );
           let accumulated = "";
           for await (const token of result) {
-            accumulated += token;
+            if (typeof token === "string") {
+              accumulated += token;
+            } else {
+              accumulated += JSON.stringify(token);
+            }
           }
           expect(accumulated).toEqual(
             "Hello World!\n\nHere is the prompt\nbar",
@@ -136,7 +140,11 @@ suite("streaming", () => {
             <MyComponent stream={true} foo="bar">
               {async (response: Streamable) => {
                 for await (const token of response) {
-                  result += token;
+                  if (typeof token === "string") {
+                    result += token;
+                  } else {
+                    result += JSON.stringify(token);
+                  }
                 }
               }}
             </MyComponent>,
@@ -182,7 +190,11 @@ suite("streaming", () => {
           );
           let accumulated = "";
           for await (const token of result) {
-            accumulated += token;
+            if (typeof token === "string") {
+              accumulated += token;
+            } else {
+              accumulated += JSON.stringify(token);
+            }
           }
           expect(accumulated).toEqual(
             "Hello World!\n\nHere is the prompt\nfoo",
