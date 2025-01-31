@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "`GenSX command line tools",
   "bin": {
-    "gensx-cli": "./bin/run"
+    "gensx": "./bin/run"
   },
   "directories": {
     "lib": "src",
@@ -37,6 +37,7 @@
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^20.12.12",
+    "tsx": "^4.19.2",
     "typescript": "^5.4.5"
   },
   "dependencies": {
