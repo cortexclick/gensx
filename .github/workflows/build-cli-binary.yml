@@ -1,0 +1,92 @@
+name: "🎁 Build CLI Binary"
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - packages/gensx-cli/**
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - "**.md"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - node22-linux-arm64
+          - node22-linux-x64
+          - node22-macos-arm64
+          - node22-macos-x64
+          - node22-win-arm64
+          - node22-win-x64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node ⚙️
+        uses: ./.github/actions/setup-node
+        with:
+          version: 20.x
+
+      - name: Extract Version from Package.json
+        run: |
+          VERSION=$(jq -r '.version' packages/gensx-cli/package.json)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Build CLI
+        run: pnpm build
+        working-directory: packages/gensx-cli
+
+      - name: Building...
+        run: TARGET=${{ matrix.target }} pnpm pkg
+        working-directory: packages/gensx-cli
+
+      - name: Prepare content...
+        run: |
+          mv README.md dist/pkg
+      - name: Setup environment (Unix)
+        if: contains(fromJSON('["linux-arm64", "linux-x64", "macos-arm64", "macos-x64"]'), matrix.target)
+        run: |
+          echo "_EXT=tar.gz" >> $GITHUB_ENV
+      - name: Setup environment (Windows)
+        if: contains(fromJSON('["win-arm64", "win-x64"]'), matrix.target)
+        run: |
+          echo "_EXT=zip" >> $GITHUB_ENV
+      - name: Change permissions (Unix)
+        if: contains(fromJSON('["linux-arm64", "linux-x64", "macos-arm64", "macos-x64"]'), matrix.target)
+        run: |
+          chmod -R 777 ./dist/pkg
+      - name: Tar dist (Unix)
+        if: contains(fromJSON('["linux-arm64", "linux-x64", "macos-arm64", "macos-x64"]'), matrix.target)
+        run: |
+          tar czf ${{ matrix.target }}.${{ env._EXT }} -C ./dist/pkg .
+          cp ${{ matrix.target }}.${{ env._EXT }} gensx_${{ env.VERSION }}_${{ matrix.target }}.${{ env._EXT }}
+
+      - name: Zipping dist (Windows)
+        if: contains(fromJSON('["win-arm64", "win-x64"]'), matrix.target)
+        working-directory: dist
+        run: |
+          zip -r ${{ matrix.target }}.${{ env._EXT }} .
+          mv ${{ matrix.target }}.${{ env._EXT }} ../
+          cd ..
+          cp ${{ matrix.target }}.${{ env._EXT }} gensx_${{ env.VERSION }}_${{ matrix.target }}.${{ env._EXT }}
+
+      - name: Uploading...
+        if: github.ref == 'refs/heads/master'
+        uses: softprops/action-gh-release@v2.0.8
+        with:
+          tag_name: ${{ env.VERSION }}
+          token: ${{ secrets.PAT_GITHUB_TOKEN }}
+          prerelease: true
+          files: gensx_${{ env.VERSION }}_${{ matrix.target }}.${{ env._EXT }}

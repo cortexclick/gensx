@@ -11,8 +11,9 @@ export default defineConfig(({ command }) => ({
         index: resolve(__dirname, "src/index.ts"),
         run: resolve(__dirname, "src/run.ts"),
       },
-      formats: ["es"],
-      fileName: (_, entryName) => `${entryName}.js`,
+      formats: ["es", "cjs"],
+      fileName: (format, entryName) =>
+        `${entryName}.${format === "es" ? "mjs" : "cjs"}`,
     },
     rollupOptions: {
       external: (id) => !id.startsWith(".") && !id.startsWith("/"),
