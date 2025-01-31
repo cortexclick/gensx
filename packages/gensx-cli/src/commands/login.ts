@@ -1,3 +1,3 @@
 export function login() {
-  console.log("Login to GenSX");
+  console.info("Login to GenSX");
 }
