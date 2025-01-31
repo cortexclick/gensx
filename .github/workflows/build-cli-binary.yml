@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: "Sanitize Branch Name"
-        id: branches
+        id: sanitize-branch-name
         uses: transferwise/sanitize-branch-name@v1
 
       - name: Setup Node ⚙️
@@ -51,7 +51,7 @@ jobs:
         if: github.ref != 'refs/heads/main'
         run: |
           VERSION=$(jq -r '.version' packages/gensx-cli/package.json)
-          echo "VERSION=${{ steps.branches.outputs.sanitized_branch_name }}-${{ github.sha }}" >> $GITHUB_ENV
+          echo "VERSION=${{ steps.sanitize-branch-name.outputs.sanitized-branch-name }}-${{ github.sha }}" >> $GITHUB_ENV
 
       - name: Build CLI
         run: pnpm build
