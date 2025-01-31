@@ -16,9 +16,9 @@ const prompt = "Write an article about using gensx to build LLM applications";
 
 const [tweet, blogPost] = await gsx.execute(
   <BlogWritingWorkflow title={title} prompt={prompt}>
-    {blogPost => (
+    {(blogPost) => (
       <TweetWritingWorkflow content={blogPost}>
-        {tweet => {
+        {(tweet) => {
           return [tweet, blogPost];
         }}
       </TweetWritingWorkflow>

@@ -17,7 +17,7 @@ export default defineConfig(({ command }) => ({
       fileName: (_, entryName) => `${entryName}.js`,
     },
     rollupOptions: {
-      external: id => !id.startsWith(".") && !id.startsWith("/"),
+      external: (id) => !id.startsWith(".") && !id.startsWith("/"),
     },
     watch: command === "serve" ? {} : undefined,
   },
@@ -31,7 +31,7 @@ export default defineConfig(({ command }) => ({
       include: ["src"],
       outDir: "dist",
       rollupTypes: true,
-      afterDiagnostic: diagnostics => {
+      afterDiagnostic: (diagnostics) => {
         if (diagnostics.length) {
           throw new Error("Compile failure");
         }

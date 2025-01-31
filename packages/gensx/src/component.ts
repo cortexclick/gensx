@@ -30,7 +30,7 @@ export function Component<P, O>(
   fn: (props: P) => MaybePromise<O | DeepJSXElement<O> | JSX.Element>,
   defaultOpts?: DefaultOpts,
 ): GsxComponent<WithComponentOpts<P>, O> {
-  const GsxComponent: GsxComponent<WithComponentOpts<P>, O> = async props => {
+  const GsxComponent: GsxComponent<WithComponentOpts<P>, O> = async (props) => {
     const context = getCurrentContext();
     const workflowContext = context.getWorkflowContext();
     const { checkpointManager } = workflowContext;
@@ -95,9 +95,9 @@ export function StreamComponent<P>(
   fn: (props: P) => MaybePromise<Streamable | JSX.Element>,
   defaultOpts?: DefaultOpts,
 ): GsxStreamComponent<WithComponentOpts<P>> {
-  const GsxStreamComponent: GsxStreamComponent<
-    WithComponentOpts<P>
-  > = async props => {
+  const GsxStreamComponent: GsxStreamComponent<WithComponentOpts<P>> = async (
+    props,
+  ) => {
     const context = getCurrentContext();
     const workflowContext = context.getWorkflowContext();
     const { checkpointManager } = workflowContext;

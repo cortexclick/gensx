@@ -28,7 +28,7 @@ suite("gensx", () => {
 
     const result = await gsx.execute(
       <MyComponent foo="bar">
-        {async foo => {
+        {async (foo) => {
           await setTimeout(0);
           return foo + " world";
         }}
@@ -48,7 +48,7 @@ suite("gensx", () => {
 
     const result = await gsx.execute(
       <MyComponent foo="bar">
-        {foo => {
+        {(foo) => {
           return <MyComponent foo={foo + " world"} />;
         }}
       </MyComponent>,
@@ -74,7 +74,7 @@ suite("gensx", () => {
         once: <Doubler input={input} />,
         twice: (
           <Doubler input={input}>
-            {result => <Doubler input={result} />}
+            {(result) => <Doubler input={result} />}
           </Doubler>
         ),
       };
@@ -104,7 +104,7 @@ suite("gensx", () => {
           <>
             <Doubler input={input} />
             <Doubler input={input}>
-              {result => <Doubler input={result} />}
+              {(result) => <Doubler input={result} />}
             </Doubler>
           </>
         );
@@ -131,7 +131,7 @@ suite("gensx", () => {
         return [
           <Doubler input={input} />,
           <Doubler input={input}>
-            {result => <Doubler input={result} />}
+            {(result) => <Doubler input={result} />}
           </Doubler>,
         ];
       },
@@ -160,7 +160,7 @@ suite("gensx", () => {
 
     const result = await gsx.execute(
       <MyComponent input="foo">
-        {result => (
+        {(result) => (
           <>
             <Doubler input={result} />
             <Doubler input="bar" />

@@ -206,7 +206,7 @@ suite("streaming", () => {
         test("nested children with stream=true receive Streamable type", async () => {
           await gsx.execute(
             <MyComponent stream={true} foo="bar">
-              {async response => {
+              {async (response) => {
                 // TypeScript should infer response as Streamable
                 const stream: Streamable = response;
                 let accumulated = "";
@@ -223,7 +223,7 @@ suite("streaming", () => {
         test("nested children with stream=false receive string type", async () => {
           await gsx.execute(
             <MyComponent foo="bar">
-              {response => {
+              {(response) => {
                 // TypeScript should infer response as string
                 const str: string = response;
                 return <MyComponent foo={str} />;

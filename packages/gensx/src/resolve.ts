@@ -25,7 +25,7 @@ export async function resolveDeep<T>(value: unknown): Promise<T> {
   // Handle arrays
   if (Array.isArray(value)) {
     const resolvedArray = await Promise.all(
-      value.map(item => resolveDeep(item)),
+      value.map((item) => resolveDeep(item)),
     );
     return resolvedArray as T;
   }
