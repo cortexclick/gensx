@@ -13,7 +13,7 @@ export default defineConfig(({ command }) => ({
       },
       formats: ["es", "cjs"],
       fileName: (format, entryName) =>
-        `${entryName}.${format === "es" ? "mjs" : "cjs"}`,
+        `${entryName}.${format === "es" ? "js" : "cjs"}`,
     },
     rollupOptions: {
       external: (id) => !id.startsWith(".") && !id.startsWith("/"),
