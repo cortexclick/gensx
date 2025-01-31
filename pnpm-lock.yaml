@@ -351,6 +351,10 @@ importers:
         version: 2.1.8(@types/node@20.17.11)
 
   packages/gensx:
+    dependencies:
+      '@gensx/cli':
+        specifier: workspace:*
+        version: link:../gensx-cli
     devDependencies:
       '@types/node':
         specifier: ^20.17.11

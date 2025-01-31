@@ -5,6 +5,7 @@
   "bin": {
     "gensx": "./dist/run.js"
   },
+  "main": "./dist/index.js",
   "directories": {
     "lib": "src",
     "bin": "bin"
