@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "`GenSX command line tools",
   "bin": {
-    "gensx": "./bin/run"
+    "gensx": "./dist/run.js"
   },
   "directories": {
     "lib": "src",
@@ -18,8 +18,8 @@
     "url": "git+ssh://git@github.com/gensx-inc/gensx.git"
   },
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c --watch",
+    "build": "vite build",
+    "dev": "vite build --watch",
     "clean": "rm -rf dist",
     "compile": "tsc",
     "lint": "eslint .",
@@ -46,5 +46,8 @@
     "picocolors": "^1.0.1",
     "typescript": "^5.3.3"
   },
-  "type": "module"
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  }
 }
