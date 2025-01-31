@@ -60,27 +60,28 @@ jobs:
       - name: Prepare content...
         run: |
           mv README.md dist/pkg
+        working-directory: packages/gensx-cli
       - name: Setup environment (Unix)
-        if: contains(fromJSON('["linux-arm64", "linux-x64", "macos-arm64", "macos-x64"]'), matrix.target)
+        if: contains(fromJSON('["node22-linux-arm64", "node22-linux-x64", "node22-macos-arm64", "node22-macos-x64"]'), matrix.target)
         run: |
           echo "_EXT=tar.gz" >> $GITHUB_ENV
       - name: Setup environment (Windows)
-        if: contains(fromJSON('["win-arm64", "win-x64"]'), matrix.target)
+        if: contains(fromJSON('["node22-win-arm64", "node22-win-x64"]'), matrix.target)
         run: |
           echo "_EXT=zip" >> $GITHUB_ENV
       - name: Change permissions (Unix)
-        if: contains(fromJSON('["linux-arm64", "linux-x64", "macos-arm64", "macos-x64"]'), matrix.target)
+        if: contains(fromJSON('["node22-linux-arm64", "node22-linux-x64", "node22-macos-arm64", "node22-macos-x64"]'), matrix.target)
         run: |
           chmod -R 777 ./dist/pkg
       - name: Tar dist (Unix)
-        if: contains(fromJSON('["linux-arm64", "linux-x64", "macos-arm64", "macos-x64"]'), matrix.target)
+        if: contains(fromJSON('["node22-linux-arm64", "node22-linux-x64", "node22-macos-arm64", "node22-macos-x64"]'), matrix.target)
         run: |
           tar czf ${{ matrix.target }}.${{ env._EXT }} -C ./dist/pkg .
           cp ${{ matrix.target }}.${{ env._EXT }} gensx_${{ env.VERSION }}_${{ matrix.target }}.${{ env._EXT }}
 
       - name: Zipping dist (Windows)
         if: contains(fromJSON('["win-arm64", "win-x64"]'), matrix.target)
-        working-directory: dist
+        working-directory: packages/gensx-cli/dist
         run: |
           zip -r ${{ matrix.target }}.${{ env._EXT }} .
           mv ${{ matrix.target }}.${{ env._EXT }} ../
@@ -94,4 +95,4 @@ jobs:
           tag_name: ${{ env.VERSION }}
           token: ${{ secrets.PAT_GITHUB_TOKEN }}
           prerelease: true
-          files: gensx_${{ env.VERSION }}_${{ matrix.target }}.${{ env._EXT }}
+          files: packages/gensx-cli/gensx_${{ env.VERSION }}_${{ matrix.target }}.${{ env._EXT }}
