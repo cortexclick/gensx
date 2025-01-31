@@ -2,17 +2,13 @@ name: "🎁 Build CLI Binary"
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
-      - packages/gensx-cli/**
+      - "packages/gensx-cli/**/*"
   pull_request:
-    branches:
-      - main
+    branches: [main]
     paths:
-      - packages/gensx-cli/**
-    paths-ignore:
-      - "**.md"
+      - "packages/gensx-cli/**/*"
   workflow_dispatch:
 
 concurrency:
@@ -41,17 +37,24 @@ jobs:
         with:
           version: 20.x
 
-      - name: Extract Version from Package.json
+      - name: Extract Version from Package.json for main
+        if: github.ref == 'refs/heads/main'
         run: |
           VERSION=$(jq -r '.version' packages/gensx-cli/package.json)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Extract Version from Package.json for CI
+        if: github.ref != 'refs/heads/main'
+        run: |
+          VERSION=$(jq -r '.version' packages/gensx-cli/package.json)
+          echo "VERSION=$VERSION-${{ github.ref_name }}" >> $GITHUB_ENV
 
       - name: Build CLI
         run: pnpm build
         working-directory: packages/gensx-cli
 
       - name: Building...
-        run: TARGET=${{ matrix.target }} pnpm pkg
+        run: TARGET=${{ matrix.target }} pnpm run package
         working-directory: packages/gensx-cli
 
       - name: Prepare content...
@@ -85,7 +88,7 @@ jobs:
           cp ${{ matrix.target }}.${{ env._EXT }} gensx_${{ env.VERSION }}_${{ matrix.target }}.${{ env._EXT }}
 
       - name: Uploading...
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2.0.8
         with:
           tag_name: ${{ env.VERSION }}
