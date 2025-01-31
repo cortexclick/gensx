@@ -1,0 +1,49 @@
+{
+  "name": "@gensx/cli",
+  "version": "1.0.0",
+  "description": "`GenSX command line tools",
+  "bin": {
+    "gensx-cli": "./bin/run"
+  },
+  "directories": {
+    "lib": "src",
+    "bin": "bin"
+  },
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/gensx-inc/gensx.git"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c --watch",
+    "clean": "rm -rf dist",
+    "compile": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "start": "tsx ./bin/run.ts",
+    "start:node": "node ./bin/run"
+  },
+  "keywords": [
+    "typescript",
+    "gensx",
+    "cli"
+  ],
+  "author": "GenSX Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.4",
+    "@types/node": "^20.12.12",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "commander": "^11.0.0",
+    "consola": "^3.2.3",
+    "picocolors": "^1.0.1",
+    "typescript": "^5.3.3"
+  },
+  "type": "module"
+}
