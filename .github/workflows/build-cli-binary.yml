@@ -3,12 +3,14 @@ name: "🎁 Build CLI Binary"
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - packages/gensx-cli/**
   pull_request:
     branches:
-      - master
+      - main
+    paths:
+      - packages/gensx-cli/**
     paths-ignore:
       - "**.md"
   workflow_dispatch:
