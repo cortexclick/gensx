@@ -1,6 +1,6 @@
 {
   "name": "@gensx/cli",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "`GenSX command line tools",
   "bin": {
     "gensx": "./dist/run.js"
@@ -14,10 +14,6 @@
     "dist",
     "bin"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/gensx-inc/gensx.git"
-  },
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
