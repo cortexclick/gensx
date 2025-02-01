@@ -1,0 +1,138 @@
+---
+title: How GenSX works
+description: This guide explains how GenSX works and executes workflows
+sidebar:
+  order: 1
+---
+
+GenSX is a simple framework for building complex LLM workflows. While most LLM frameworks use graph-based APIs that require explicit node and edge definitions, GenSX takes a different approach. It uses JSX to create intuitive, composable workflows that are easy to understand and maintain.
+
+## JSX and component model
+
+Unlike React's UI components, GenSX uses JSX to compose data processing workflows. While the syntax is familiar to React developers, there are key differences:
+
+- Components are pure functions that transform data, not UI elements
+- There's no virtual DOM or reconciliation
+- Components execute once and produce a value, rather than rendering and re-rendering
+- The component tree represents data flow, not visual hierarchy
+
+Here's a basic example of a component that takes in a list of tweets and analyzes them using a LLM:
+
+```tsx
+const TweetAnalyzer = gsx.Component<TweetAnalyzerProps, string>(
+  "TweetAnalyzer",
+  async ({ tweets }) => {
+    const prompt = tweets
+      .map(
+        (tweet) =>
+          `<tweet><author>${tweet.author}</author><content>${tweet.content}</content></tweet>`,
+      )
+      .join("\n");
+    return (
+      <ChatCompletion
+        model="gpt-4o"
+        messages={[
+          { role: "system", content: "Analyze key themes in these tweets..." },
+          { role: "user", content: prompt },
+        ]}
+      />
+    );
+  },
+);
+```
+
+Workflows are then composed of these components and are executed using `gsx.execute()`:
+
+```tsx
+const result = await gsx.execute(
+  <TweetCollector query="DeepSeek R1 vs o3-mini">
+    {(tweets) => (
+      <TweetAnalyzer tweets={tweets}>
+        {(trends) => <ReportGenerator trends={trends} tweets={tweets} />}
+      </TweetAnalyzer>
+    )}
+  </TweetCollector>,
+);
+```
+
+## Component resolution and execution
+
+When you call `gsx.execute()` on a component tree, GenSX:
+
+1. Creates a dependency graph from your JSX tree
+2. Tracks dependencies between components through prop passing and child functions
+3. Executes components in parallel where possible while respecting dependencies
+4. Resolves all values - including promises, arrays, objects, and nested components
+
+This automatic dependency tracking ensures components only execute when their dependencies while taking advantage of parallelization wherever possible.
+
+For example, when executing this workflow:
+
+```tsx
+const result = await gsx.execute(
+  <ParallelResearch prompt={prompt}>
+    {(research) => (
+      <LLMWriter prompt={prompt} research={research}>
+        {(draft) => <LLMEditor draft={draft} />}
+      </LLMWriter>
+    )}
+  </ParallelResearch>,
+);
+```
+
+GenSX will:
+
+- Start executing `ParallelResearch` immediately
+- Wait for its result, `research`, to be available through the child function
+- Pass the research to `LLMWriter` and execute it
+- Finally execute `LLMEditor` with the draft from `LLMWriter`
+
+## Resolving nested values and complex structures
+
+GenSX automatically handles resolution of:
+
+- Promises and async functions
+- Arrays of components or values
+- Objects containing components or values
+- Nested JSX elements
+- Child function results
+
+For example, consider this nested structure:
+
+```tsx
+const result = await gsx.execute({
+  summaries: [<Summarize text={text1} />, <Summarize text={text2} />],
+  metadata: {
+    sentiment: <AnalyzeSentiment text={text1 + text2} />,
+    topics: Promise.resolve(["ai", "tech"]),
+  },
+});
+```
+
+GenSX will:
+
+1. Execute both `Summarize` components in parallel
+2. Execute `AnalyzeSentiment` in parallel with the summaries
+3. Resolve the topics promise
+4. Maintain the object structure in the final output:
+
+```tsx
+{
+  summaries: [
+    "First summary...",
+    "Second summary..."
+  ],
+  metadata: {
+    sentiment: "positive",
+    topics: ['ai', 'tech']
+  }
+}
+```
+
+## Visualizing and debugging workflows
+
+When used with the [GenSX app](https://app.gensx.com), GenSX automatically tracks the execution of your workflow to give you full visibility into your workflow's execution.
+
+You can see the execution graph, the inputs and outputs of each component, and other information like the execution time and status of each component. This makes it easy to debug and understand your workflow so you can see what's happening and make improvements where needed.
+
+![Workflow Visualization](/src/assets/docs/gensx-visualize-workflow.png)
