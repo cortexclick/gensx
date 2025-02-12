@@ -51,10 +51,10 @@ export default defineConfig({
           label: "Concepts",
           autogenerate: { directory: "concepts" },
         },
-        // {
-        //   label: "LLM patterns",
-        //   autogenerate: { directory: "patterns" },
-        // },
+        {
+          label: "Patterns",
+          autogenerate: { directory: "patterns" },
+        },
         {
           label: "Examples",
           autogenerate: { directory: "examples" },
