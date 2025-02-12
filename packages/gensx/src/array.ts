@@ -11,17 +11,17 @@ export class GsxArray<T> {
 
   map<U>(fn: (item: T) => JSX.Element): GsxArray<U> {
     const mapped = this.promise
-      .then(items => execute<T[]>(items))
-      .then(resolvedItems => resolvedItems.map(fn));
+      .then((items) => execute<T[]>(items))
+      .then((resolvedItems) => resolvedItems.map(fn));
     return new GsxArray(mapped);
   }
 
   flatMap<U>(fn: (item: T) => JSX.Element): GsxArray<U> {
     const mapped = this.promise
-      .then(items => execute<T[]>(items))
-      .then(async resolvedItems => {
+      .then((items) => execute<T[]>(items))
+      .then(async (resolvedItems) => {
         const nestedResults = await Promise.all(
-          resolvedItems.map(async item => {
+          resolvedItems.map(async (item) => {
             const result = await execute<U | U[]>(fn(item));
             return Array.isArray(result) ? result : [result];
           }),
@@ -35,8 +35,8 @@ export class GsxArray<T> {
     predicate: (item: T, index: number, array: T[]) => JSX.Element | boolean,
   ): GsxArray<T> {
     const filtered = this.promise
-      .then(items => execute<T[]>(items))
-      .then(async resolvedItems => {
+      .then((items) => execute<T[]>(items))
+      .then(async (resolvedItems) => {
         const results = await Promise.all(
           resolvedItems.map(async (item, index) => {
             const predicateResult = predicate(item, index, resolvedItems);
@@ -60,8 +60,8 @@ export class GsxArray<T> {
 
   reduce<U>(fn: (acc: U, item: T) => JSX.Element, initial: U): Promise<U> {
     return this.promise
-      .then(items => execute<T[]>(items))
-      .then(async resolvedItems => {
+      .then((items) => execute<T[]>(items))
+      .then(async (resolvedItems) => {
         let result = initial;
         for (const item of resolvedItems) {
           result = await execute<U>(fn(result, item));
@@ -71,7 +71,7 @@ export class GsxArray<T> {
   }
 
   toArray(): Promise<T[]> {
-    return this.promise.then(items => execute<T[]>(items));
+    return this.promise.then((items) => execute<T[]>(items));
   }
 }
 

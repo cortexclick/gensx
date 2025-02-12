@@ -13,7 +13,7 @@ function generateUUID(): string {
     return crypto.randomUUID();
   } catch {
     // Simple fallback for environments without crypto
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
       const r = (Math.random() * 16) | 0;
       const v = c === "x" ? r : (r & 0x3) | 0x8;
       return v.toString(16);
@@ -112,7 +112,7 @@ export class CheckpointManager implements CheckpointWriter {
 
   private attachToParent(node: ExecutionNode, parent: ExecutionNode) {
     node.parentId = parent.id;
-    if (!parent.children.some(child => child.id === node.id)) {
+    if (!parent.children.some((child) => child.id === node.id)) {
       parent.children.push(node);
     }
   }
@@ -335,7 +335,7 @@ export class CheckpointManager implements CheckpointWriter {
     }
 
     // Recursively mask children
-    node.children = node.children.map(child => this.maskExecutionTree(child));
+    node.children = node.children.map((child) => this.maskExecutionTree(child));
 
     return node;
   }
@@ -363,7 +363,7 @@ export class CheckpointManager implements CheckpointWriter {
       const bKeys = Object.keys(b);
       return (
         aKeys.length === bKeys.length &&
-        aKeys.every(key =>
+        aKeys.every((key) =>
           this.isEqual(a[key as keyof typeof a], b[key as keyof typeof b]),
         )
       );
@@ -447,7 +447,7 @@ export class CheckpointManager implements CheckpointWriter {
     // Handle arrays and objects (excluding ArrayBuffer views)
     if (Array.isArray(data) || !ArrayBuffer.isView(data)) {
       const values = Array.isArray(data) ? data : Object.values(data);
-      values.forEach(value => {
+      values.forEach((value) => {
         this.collectSecretValues(value, nodeSecrets, visited);
       });
     }
@@ -507,7 +507,9 @@ export class CheckpointManager implements CheckpointWriter {
 
     // Sort secrets by length (longest first) to handle overlapping secrets correctly
     const secrets = Array.from(effectiveSecrets)
-      .filter(s => typeof s === "string" && s.length >= this.MIN_SECRET_LENGTH)
+      .filter(
+        (s) => typeof s === "string" && s.length >= this.MIN_SECRET_LENGTH,
+      )
       .sort((a, b) => String(b).length - String(a).length);
 
     // Replace each secret with [secret]

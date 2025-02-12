@@ -503,8 +503,8 @@ suite("tree reconstruction", () => {
 
     expect(cm.root?.componentName).toBe("Parent2");
     expect(cm.root?.children).toHaveLength(2);
-    expect(cm.root?.children.map(c => c.componentName)).toContain("Child2A");
-    expect(cm.root?.children.map(c => c.componentName)).toContain("Child2B");
+    expect(cm.root?.children.map((c) => c.componentName)).toContain("Child2A");
+    expect(cm.root?.children.map((c) => c.componentName)).toContain("Child2B");
   });
 
   test("handles deep tree with mixed ordering", () => {
@@ -523,8 +523,8 @@ suite("tree reconstruction", () => {
     expect(root?.componentName).toBe("Root");
     expect(root?.children).toHaveLength(2);
 
-    const branchA = root?.children.find(c => c.componentName === "BranchA");
-    const branchB = root?.children.find(c => c.componentName === "BranchB");
+    const branchA = root?.children.find((c) => c.componentName === "BranchA");
+    const branchB = root?.children.find((c) => c.componentName === "BranchB");
 
     expect(branchA?.children[0].componentName).toBe("LeafA");
     expect(branchB?.children[0].componentName).toBe("LeafB");
@@ -560,13 +560,13 @@ suite("tree reconstruction", () => {
     expect(root?.componentName).toBe("Root");
     expect(root?.children).toHaveLength(2);
 
-    const branchA = root?.children.find(c => c.componentName === "BranchA");
-    const branchB = root?.children.find(c => c.componentName === "BranchB");
+    const branchA = root?.children.find((c) => c.componentName === "BranchA");
+    const branchB = root?.children.find((c) => c.componentName === "BranchB");
 
     // Verify all nodes are connected properly
-    expect(branchA?.children.map(c => c.componentName)).toContain("LeafA");
-    expect(branchA?.children.map(c => c.componentName)).toContain("LeafC");
-    expect(branchB?.children.map(c => c.componentName)).toContain("LeafB");
+    expect(branchA?.children.map((c) => c.componentName)).toContain("LeafA");
+    expect(branchA?.children.map((c) => c.componentName)).toContain("LeafC");
+    expect(branchB?.children.map((c) => c.componentName)).toContain("LeafB");
 
     // Verify tree integrity - every node should have correct parent reference
     function verifyNodeParentRefs(node: ExecutionNode) {

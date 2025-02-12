@@ -25,6 +25,9 @@
   "files": [
     "dist"
   ],
+  "bin": {
+    "gensx": "./dist/run-cli.js"
+  },
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
@@ -41,6 +44,9 @@
   ],
   "author": "GenSX Team",
   "license": "Apache-2.0",
+  "dependencies": {
+    "@gensx/cli": "workspace:*"
+  },
   "devDependencies": {
     "@types/node": "^20.17.11",
     "@vitest/coverage-istanbul": "^2.1.8",

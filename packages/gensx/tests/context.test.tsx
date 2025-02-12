@@ -251,7 +251,7 @@ suite("context", () => {
 
       const Providers = gsx.Component<{ value: string }, never>(
         "Providers",
-        async props => {
+        async (props) => {
           await setTimeout(0);
           return (
             <TestContext.Provider value={`${props.value} outer1`}>

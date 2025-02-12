@@ -8,7 +8,12 @@ import eslintPluginVitest from "eslint-plugin-vitest";
 
 export default [
   {
-    ignores: ["**/dist/**", "**/node_modules/**", "**/.turbo/**"],
+    ignores: [
+      "**/dist/**",
+      "**/node_modules/**",
+      "**/.turbo/**",
+      "**/vite.config.ts.timestamp*",
+    ],
   },
   {
     files: ["**/*.{js,mjs,cjs,jsx}"],

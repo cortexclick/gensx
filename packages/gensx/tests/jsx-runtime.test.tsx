@@ -23,7 +23,7 @@ suite("jsx-runtime", () => {
 
     const result = await gsx.execute(
       <MyComponent>
-        {async value => {
+        {async (value) => {
           await setTimeout(0);
           return value + " world";
         }}

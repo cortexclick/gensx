@@ -36,6 +36,9 @@ jobs:
         with:
           version: ${{ matrix.node-version }}
 
+      - name: Build 📦
+        run: pnpm build
+
       - name: Run tests 🧪
         run: pnpm test
         env:
@@ -47,6 +50,3 @@ jobs:
         with:
           working-directory: packages/gensx
           vite-config-path: vitest.config.ts
-
-      - name: Build 📦
-        run: pnpm build

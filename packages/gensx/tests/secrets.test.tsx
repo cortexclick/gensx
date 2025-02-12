@@ -95,7 +95,7 @@ const EdgeCaseComponent = gsx.Component<
 const SpecialCharComponent = gsx.Component<
   { dotted: string; regex: string; unicode: string; url: string },
   string
->("SpecialCharComponent", props => Object.values(props).join(", "), {
+>("SpecialCharComponent", (props) => Object.values(props).join(", "), {
   secretProps: ["dotted", "regex", "unicode", "url"],
 });
 

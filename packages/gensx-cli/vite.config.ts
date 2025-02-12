@@ -9,22 +9,16 @@ export default defineConfig(({ command }) => ({
     lib: {
       entry: {
         index: resolve(__dirname, "src/index.ts"),
-        "jsx-runtime": resolve(__dirname, "src/jsx-runtime.ts"),
-        "jsx-dev-runtime": resolve(__dirname, "src/jsx-dev-runtime.ts"),
-        "run-cli": resolve(__dirname, "src/run-cli.ts"),
+        run: resolve(__dirname, "src/run.ts"),
       },
-      formats: ["es"],
-      fileName: (_, entryName) => `${entryName}.js`,
+      formats: ["es", "cjs"],
+      fileName: (format, entryName) =>
+        `${entryName}.${format === "es" ? "js" : "cjs"}`,
     },
     rollupOptions: {
       external: (id) => !id.startsWith(".") && !id.startsWith("/"),
     },
     watch: command === "serve" ? {} : undefined,
-  },
-  resolve: {
-    alias: {
-      "@": resolve(__dirname, "./src"),
-    },
   },
   plugins: [
     dts({
