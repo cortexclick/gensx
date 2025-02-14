@@ -7,12 +7,12 @@ import {
   ChatCompletionCreateParamsNonStreaming,
 } from "openai/resources/chat/completions";
 import { Stream } from "openai/streaming";
+import { z } from "zod";
 
 import { OpenAIChatCompletion } from "./openai.js";
 import { StreamCompletion } from "./stream.js";
-import { GSXSchema, StructuredOutput } from "./structured-output.js";
+import { StructuredOutput } from "./structured-output.js";
 import { GSXTool, ToolsCompletion } from "./tools.js";
-
 // Types for the composition-based implementation
 export type StreamingProps = Omit<
   ChatCompletionCreateParamsNonStreaming,
@@ -28,7 +28,7 @@ export type StructuredProps<O = unknown> = Omit<
 > & {
   stream?: false;
   tools?: GSXTool<any>[];
-  outputSchema: GSXSchema<O>;
+  outputSchema: z.ZodSchema<O>;
 };
 
 export type StandardProps = Omit<

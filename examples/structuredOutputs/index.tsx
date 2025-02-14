@@ -1,23 +1,28 @@
-import { ChatCompletion, OpenAIProvider } from "@gensx/openai";
+import {
+  ChatCompletion,
+  GSXChatCompletion,
+  OpenAIProvider,
+} from "@gensx/openai";
 import { gsx } from "gensx";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { z } from "zod";
+
+const ExtractEntitiesSchema = z.object({
+  people: z.array(z.string()),
+  places: z.array(z.string()),
+  organizations: z.array(z.string()),
+});
+
+type ExtractEntitiesOutput = z.infer<typeof ExtractEntitiesSchema>;
 
 interface ExtractEntitiesProps {
   text: string;
 }
 
-interface ExtractEntitiesBasicOutput {
-  people: string[];
-  places: string[];
-  organizations: string[];
-}
-
-// Define the basic version of the component
-const ExtractEntitiesBasic = gsx.Component<
+const ExtractEntities = gsx.Component<
   ExtractEntitiesProps,
-  ExtractEntitiesBasicOutput
->("ExtractEntitiesBasic", ({ text }) => {
+  ExtractEntitiesOutput
+>("ExtractEntities", ({ text }) => {
   const prompt = `Please review the following text and extract all the people, places, and organizations mentioned.
 
   <text>
@@ -31,7 +36,7 @@ const ExtractEntitiesBasic = gsx.Component<
     "organizations": ["org1", "org2", "org3"]
   }`;
   return (
-    <ChatCompletion
+    <GSXChatCompletion
       model="gpt-4o-mini"
       messages={[
         {
@@ -39,29 +44,15 @@ const ExtractEntitiesBasic = gsx.Component<
           content: prompt,
         },
       ]}
-      response_format={{ type: "json_object" }}
-    >
-      {(response: string) => {
-        return JSON.parse(response) as ExtractEntitiesBasicOutput;
-      }}
-    </ChatCompletion>
+      outputSchema={ExtractEntitiesSchema}
+    ></GSXChatCompletion>
   );
 });
 
-// Define the Zod schema
-const ExtractEntitiesSchema = z.object({
-  people: z.array(z.string()),
-  places: z.array(z.string()),
-  organizations: z.array(z.string()),
-});
-
-type ExtractEntitiesOutput = z.infer<typeof ExtractEntitiesSchema>;
-
-// Define the more advanced version of the component using zod
-const ExtractEntities = gsx.Component<
+const ExtractEntitiesWithoutHelpers = gsx.Component<
   ExtractEntitiesProps,
   ExtractEntitiesOutput
->("ExtractEntities", ({ text }) => {
+>("ExtractEntitiesWithoutHelpers", ({ text }) => {
   const prompt = `Please review the following text and extract all the people, places, and organizations mentioned.
 
   <text>
@@ -95,21 +86,21 @@ const ExtractEntities = gsx.Component<
 async function main() {
   console.log("\n🚀 Starting the structured outputs example");
 
-  console.log("\n🎯 Running the basic version");
-  const result = await gsx.execute(
-    <OpenAIProvider apiKey={process.env.OPENAI_API_KEY}>
-      <ExtractEntitiesBasic text="John Doe is a software engineer at Google." />
-    </OpenAIProvider>,
-  );
-  console.log(result);
-
-  console.log("\n🎯 Running the advanced version");
-  const result2 = await gsx.execute(
+  console.log("\n🎯 Getting structured outputs with GSXChatCompletion");
+  const result = await gsx.execute<ExtractEntitiesOutput>(
     <OpenAIProvider apiKey={process.env.OPENAI_API_KEY}>
       <ExtractEntities text="John Doe is a software engineer at Google." />
     </OpenAIProvider>,
   );
-  console.log(result2);
+  console.log(result);
+
+  console.log("\n🎯 Getting structured outputs without helpers");
+  const resultWithoutHelpers = await gsx.execute<ExtractEntitiesOutput>(
+    <OpenAIProvider apiKey={process.env.OPENAI_API_KEY}>
+      <ExtractEntitiesWithoutHelpers text="John Doe is a software engineer at Google." />
+    </OpenAIProvider>,
+  );
+  console.log(resultWithoutHelpers);
   console.log("\n✅ Structured outputs example complete");
 }
 

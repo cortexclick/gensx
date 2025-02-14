@@ -11,13 +11,11 @@ import {
   OpenAIContext,
   OpenAIProvider,
 } from "./openai.js";
-import { GSXSchema } from "./structured-output.js";
 import { GSXTool } from "./tools.js";
 
 export {
   OpenAIProvider,
   GSXChatCompletion,
-  GSXSchema,
   GSXTool,
   OpenAIChatCompletion,
   ChatCompletion,

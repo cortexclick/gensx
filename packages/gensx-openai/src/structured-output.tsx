@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { gsx } from "gensx";
-import { zodResponseFormat } from "openai/helpers/zod";
+import { zodResponseFormat } from "openai/helpers/zod.mjs";
 import {
   ChatCompletion as ChatCompletionOutput,
   ChatCompletionCreateParamsNonStreaming,
@@ -11,45 +11,12 @@ import { z } from "zod";
 import { OpenAIChatCompletion } from "./openai.js";
 import { GSXTool, ToolExecutor } from "./tools.js";
 
-// Wrapper for structured output schemas
-export class GSXSchema<T> {
-  constructor(
-    public readonly schema: z.ZodSchema<T>,
-    public readonly options: {
-      description?: string;
-    } = {},
-  ) {}
-
-  static create<T>(
-    schema: z.ZodSchema<T>,
-    options: {
-      description?: string;
-    } = {},
-  ): GSXSchema<T> {
-    return new GSXSchema(schema, options);
-  }
-
-  toResponseFormat() {
-    return zodResponseFormat(this.schema, "object", {
-      description: this.options.description,
-    });
-  }
-
-  parse(data: unknown): T {
-    return this.schema.parse(data);
-  }
-
-  safeParse(data: unknown): z.SafeParseReturnType<unknown, T> {
-    return this.schema.safeParse(data);
-  }
-}
-
 // Updated type to include retry options
 type StructuredOutputProps<O = unknown> = Omit<
   ChatCompletionCreateParamsNonStreaming,
   "stream" | "tools"
 > & {
-  outputSchema: GSXSchema<O>;
+  outputSchema: z.ZodSchema<O>;
   tools?: GSXTool<any>[];
   retry?: {
     maxAttempts?: number;
@@ -88,7 +55,7 @@ export const StructuredOutput = gsx.Component<
           {...rest}
           messages={messages}
           tools={tools}
-          response_format={outputSchema.toResponseFormat()}
+          response_format={zodResponseFormat(outputSchema, "output_schema")}
         />,
       );
 
