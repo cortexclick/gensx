@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.8](https://github.com/gensx-inc/gensx/compare/create-gensx-v0.1.7...create-gensx-v0.1.8) (2025-02-14)
+
+
+### 📚 Documentation
+
+* updating references to gensx.com ([#233](https://github.com/gensx-inc/gensx/issues/233)) ([fa90ee5](https://github.com/gensx-inc/gensx/commit/fa90ee57e242412e56e5139e7f9bda1f142459cb))
+
 ## [0.1.7](https://github.com/gensx-inc/gensx/compare/create-gensx-v0.1.6...create-gensx-v0.1.7) (2025-02-12)
 
 
