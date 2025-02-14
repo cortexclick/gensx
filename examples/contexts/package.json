@@ -17,9 +17,9 @@
     "gensx": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^20.17.11",
+    "@types/node": "^20.17.19",
     "nodemon": "^3.1.9",
     "tsx": "^4.19.2",
-    "typescript": "^5.0.0"
+    "typescript": "^5.7.3"
   }
 }

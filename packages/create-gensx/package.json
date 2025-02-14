@@ -24,12 +24,12 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.0.0",
-    "@vitest/coverage-istanbul": "^2.1.8",
-    "fs-extra": "^11.2.0",
-    "typescript": "^5.7.2",
-    "vite": "^6.0.7",
+    "@types/node": "^20.17.19",
+    "@vitest/coverage-istanbul": "^2.1.9",
+    "fs-extra": "^11.3.0",
+    "typescript": "^5.7.3",
+    "vite": "^5.4.14",
     "vite-plugin-dts": "^4.5.0",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.9"
   }
 }

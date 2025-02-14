@@ -16,13 +16,13 @@
   "dependencies": {
     "@gensx/openai": "workspace:*",
     "gensx": "workspace:*",
-    "openai": "^4.77.4",
-    "zod": "^3.24.1"
+    "openai": "^4.85.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@types/node": "^20.17.11",
+    "@types/node": "^20.17.19",
     "nodemon": "^3.1.9",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }

@@ -18,18 +18,18 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.1.0",
-    "@astrojs/starlight": "^0.30.3",
+    "@astrojs/cloudflare": "^12.2.1",
+    "@astrojs/starlight": "^0.31.1",
     "@astrojs/starlight-tailwind": "^3.0.0",
-    "astro": "^5.0.2"
+    "astro": "^5.3.0"
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^5.1.4",
-    "@cloudflare/workers-types": "^4.20241230.0",
-    "@types/node": "^20.17.11",
+    "@astrojs/tailwind": "^5.1.5",
+    "@cloudflare/workers-types": "^4.20250204.0",
+    "@types/node": "^20.17.19",
     "sharp": "^0.33.5",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2",
-    "wrangler": "^3.99.0"
+    "typescript": "^5.7.3",
+    "wrangler": "^3.109.0"
   }
 }
