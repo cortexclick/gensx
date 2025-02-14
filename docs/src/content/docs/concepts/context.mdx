@@ -1,5 +1,5 @@
 ---
-title: Context and providers
+title: Working with context and providers
 description: Learn how to use contexts and providers in GenSX to share data across components.
 sidebar:
   order: 3
@@ -170,7 +170,7 @@ const markdown = await gsx.execute(
 );
 ```
 
-## Nesting Providers
+### Nesting providers
 
 You can nest multiple providers to combine different services or configurations in your workflow. This is useful when a component needs access to multiple contexts. Here's an example that combines the OpenAI provider with our custom Firecrawl provider:
 
@@ -188,9 +188,53 @@ In this example, the `WebPageSummarizer` component can access both the OpenAI cl
 
 The order of nesting doesn't matter as long as the component using a context is wrapped by its corresponding provider somewhere up the tree.
 
-## Additional Resources
+### Using multiple OpenAI compatible providers
+
+You can also nest multiple providers to use LLMs from different companies in the same workflow. When you nest multiple OpenAI providers, components will always use the closest provider above it in the tree. The example below shows how you could use models from OpenAI and Groq in the same workflow using their OpenAI compatible APIs.
+
+First, create a provider for [Groq](https://www.groq.com/) that wraps the `OpenAIProvider` and points to the correct base URL:
+
+```tsx
+const GroqProvider = gsx.Component<{}, never>("GroqProvider", () => (
+  <OpenAIProvider
+    apiKey={process.env.GROQ_API_KEY}
+    baseURL="https://api.groq.com/openai/v1"
+  />
+));
+```
+
+Because components will always use the closest provider above them in the tree, `TutorialEditor` will use the Groq API while `TutorialWriter` will use the OpenAI API:
+
+```tsx
+export const TutorialWriterWithEditorial = gsx.Component<
+  TutorialWriterProps,
+  string
+>("TutorialWriterWithEditorial", ({ subject }) => {
+  return (
+    <OpenAIProvider apiKey={process.env.OPENAI_API_KEY}>
+      <TutorialWriter subject={subject}>
+        {(tutorial) => {
+          console.log("\n📝 Original tutorial from OpenAI:\n", tutorial);
+          return (
+            <GroqProvider>
+              <TutorialEditor tutorial={tutorial} />
+            </GroqProvider>
+          );
+        }}
+      </TutorialWriter>
+    </OpenAIProvider>
+  );
+});
+```
+
+Note that you don't have to create the `GroqProvider` component; instead you could just use the `OpenAIProvider` and pass in the correct props. However, wrapping the provider can make your code cleaner and easier to manage.
+
+To make your components more reusable, you could also pass in the model name as a prop. For more details, see the guide on [creating reusable components](../reusable-component).
+
+## Additional resources
 
 You can find the full example code demonstrating these concepts on GitHub:
 
 - [Context examples](https://github.com/gensx-inc/gensx/tree/main/examples/contexts)
 - [Provider examples](https://github.com/gensx-inc/gensx/tree/main/examples/providers)
+- [Multiple OpenAI compatible providers example](https://github.com/gensx-inc/gensx/tree/main/examples/nestedProviders)

@@ -1,0 +1,159 @@
+---
+title: Building reusable components
+description: Learn how to create reusable components that can be used with different models and providers
+sidebar:
+  order: 6
+---
+
+GenSX allows you to create reusable components that can be used with different models and providers. This is particularly useful if you want to be able to compare the behavior of different models in a component or want to share your components with others.
+
+## Creating a reusable component
+
+The pattern for creating reusable components is fairly simple--you just need to parameterize the model name and provider details. Here's an example of a `DocumentSummarizer` component that can be re-used with any OpenAI compatible API.
+
+First, define the `ProviderConfig` interface that specifies the client options, such as the `baseURL` and `apiKey`, and the model name:
+
+```tsx
+interface ProviderConfig {
+  clientOptions: ClientOptions;
+  model: string;
+}
+```
+
+Then include the `ProviderConfig` in the component's props interface:
+
+```tsx
+interface DocumentSummarizerProps {
+  document: string;
+  provider: ProviderConfig;
+}
+
+const DocumentSummarizer = gsx.Component<DocumentSummarizerProps, string>(
+  "DocumentSummarizer",
+  ({ document, provider }) => (
+    <OpenAIProvider {...provider.clientOptions}>
+      <ChatCompletion
+        model={provider.model}
+        messages={[
+          {
+            role: "user",
+            content: `Please create a high level summary of the following document targeting 30 words.\n\n<document>${document}</document>`,
+          },
+        ]}
+      />
+    </OpenAIProvider>
+  ),
+);
+```
+
+Now, whenever your invoke the `DocumentSummarizer` component, you can pass in any provider configuration that you'd like:
+
+```tsx
+const gpt4oProviderConfig = {
+  clientOptions: {
+    apiKey: process.env.OPENAI_API_KEY,
+  },
+  model: "gpt-4o",
+};
+
+const llama8bProviderConfig = {
+  clientOptions: {
+    apiKey: process.env.GROQ_API_KEY,
+    baseURL: "https://api.groq.com/openai/v1",
+  },
+  model: "llama-3.1-8b-instant",
+};
+
+const gptSummary = await gsx.execute<string>(
+  <DocumentSummarizer
+    document="Your document..."
+    provider={gpt4oProviderConfig}
+  />,
+);
+
+const llamaSummary = await gsx.execute<string>(
+  <DocumentSummarizer
+    document="Your document..."
+    provider={llama8bProviderConfig}
+  />,
+);
+```
+
+## Creating parameterized workflows
+
+You can take this one step further and create parameterized workflows with multiple provider configurations. One common use case for this is using both a small and large model in your workflow and having separate configurations for each so you can easily swap out the individual models.
+
+To demonstrate this, let's create a `DocumentProcessor` component that builds on the `DocumentSummarizer` component but also extracts keywords and categorizes the document.
+
+To get started, define an interface that receives a document and two provider configurations:
+
+```tsx
+interface DocumentProcessorProps {
+  document: string;
+  defaultProvider: ProviderConfig;
+  smallModelProvider?: ProviderConfig;
+}
+```
+
+In this example, the `defaultProvider` is required, but the `smallModelProvider` is optional. If it's not provided, the `defaultProvider` will be used in all components.
+
+Now, we can define the `DocumentProcessor` component and pass the provider configuration to the individual components:
+
+```tsx
+export const DocumentProcessor = gsx.Component<
+  DocumentProcessorProps,
+  DocumentProcessorOutput
+>("DocumentProcessor", (props) => {
+  // Use the small model provider if it's provided, otherwise use the default provider
+  const smallModelProvider = props.smallModelProvider ?? props.defaultProvider;
+  return {
+    summary: (
+      <DocumentSummarizer
+        document={props.document}
+        provider={props.defaultProvider}
+      />
+    ),
+    keywords: [
+      <KeywordsExtractor
+        document={props.document}
+        provider={smallModelProvider}
+      />,
+    ],
+    category: (
+      <CategoryClassifier
+        document={props.document}
+        provider={smallModelProvider}
+      />
+    ),
+  };
+});
+```
+
+You can find the full code for the `DocumentProcessor` component in the [reusable components example](https://github.com/gensx-inc/gensx/tree/main/examples/reusableComponents).
+
+Finally, to run the workflow, you can invoke the `DocumentProcessor` component with the appropriate provider configurations:
+
+```tsx
+const gpt4oProviderConfig = {
+  clientOptions: {
+    apiKey: process.env.OPENAI_API_KEY,
+  },
+  model: "gpt-4o",
+};
+
+const llama8bProviderConfig = {
+  clientOptions: {
+    apiKey: process.env.GROQ_API_KEY,
+    baseURL: "https://api.groq.com/openai/v1",
+  },
+  model: "llama-3.1-8b-instant",
+};
+
+const documentMetadata = await gsx.execute<DocumentProcessorOutput>(
+  <DocumentProcessor
+    document="Your document here"
+    defaultProvider={gpt4oProviderConfig}
+    smallModelProvider={llama8bProviderConfig}
+  />,
+);
+```

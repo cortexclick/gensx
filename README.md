@@ -115,13 +115,15 @@ This repo contains a number of [examples](./examples) to help you get up and run
 
 ### Basic Examples
 
-| Example                                               | Description                                           |
-| ----------------------------------------------------- | ----------------------------------------------------- |
-| 📊 [Structured Outputs](./examples/structuredOutputs) | Shows how to use structured outputs with GenSX        |
-| 🔄 [Reflection](./examples/reflection)                | Shows how to use a self-reflection pattern with GenSX |
-| 🌊 [Streaming](./examples/streaming)                  | Shows how to handle streaming responses with GenSX    |
-| 🔌 [Providers](./examples/providers)                  | Shows how to create a custom provider for GenSX       |
-| 🗃️ [Contexts](./examples/contexts)                    | Shows how to use contexts to manage state in GenSX    |
+| Example                                                 | Description                                                      |
+| ------------------------------------------------------- | ---------------------------------------------------------------- |
+| 📊 [Structured Outputs](./examples/structuredOutputs)   | Shows how to use structured outputs with GenSX                   |
+| 🔄 [Reflection](./examples/reflection)                  | Shows how to use a self-reflection pattern with GenSX            |
+| 🌊 [Streaming](./examples/streaming)                    | Shows how to handle streaming responses with GenSX               |
+| 🗃️ [Contexts](./examples/contexts)                      | Shows how to use contexts to manage state in GenSX               |
+| 🔌 [Providers](./examples/providers)                    | Shows how to create a custom provider for GenSX                  |
+| 🎭 [Nested Providers](./examples/nestedProviders)       | Demonstrates how to nest and combine multiple providers in GenSX |
+| 🧩 [Reusable Components](./examples/reusableComponents) | Shows how to create and use reusable components in GenSX         |
 
 ### Full Examples
 

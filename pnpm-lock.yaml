@@ -247,14 +247,48 @@ importers:
         specifier: ^5.0.0
         version: 5.7.2
 
-  examples/providers:
+  examples/nestedProviders:
     dependencies:
+      '@gensx/openai':
+        specifier: workspace:*
+        version: link:../../packages/gensx-openai
       '@mendable/firecrawl-js':
         specifier: ^1.15.7
         version: 1.15.7(ws@8.18.0)
       gensx:
         specifier: workspace:*
         version: link:../../packages/gensx
+      openai:
+        specifier: ^4.83.0
+        version: 4.83.0(ws@8.18.0)(zod@3.24.1)
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.11
+        version: 20.17.11
+      nodemon:
+        specifier: ^3.1.9
+        version: 3.1.9
+      tsx:
+        specifier: ^4.19.2
+        version: 4.19.2
+      typescript:
+        specifier: ^5.0.0
+        version: 5.7.2
+
+  examples/providers:
+    dependencies:
+      '@gensx/openai':
+        specifier: workspace:*
+        version: link:../../packages/gensx-openai
+      '@mendable/firecrawl-js':
+        specifier: ^1.15.7
+        version: 1.15.7(ws@8.18.0)
+      gensx:
+        specifier: workspace:*
+        version: link:../../packages/gensx
+      openai:
+        specifier: ^4.83.0
+        version: 4.83.0(ws@8.18.0)(zod@3.24.1)
     devDependencies:
       '@types/node':
         specifier: ^20.17.11
@@ -280,6 +314,34 @@ importers:
       openai:
         specifier: ^4.77.0
         version: 4.77.0(zod@3.24.1)
+    devDependencies:
+      '@types/node':
+        specifier: ^20.17.11
+        version: 20.17.11
+      nodemon:
+        specifier: ^3.1.9
+        version: 3.1.9
+      tsx:
+        specifier: ^4.19.2
+        version: 4.19.2
+      typescript:
+        specifier: ^5.0.0
+        version: 5.7.2
+
+  examples/reusableComponents:
+    dependencies:
+      '@gensx/openai':
+        specifier: workspace:*
+        version: link:../../packages/gensx-openai
+      '@mendable/firecrawl-js':
+        specifier: ^1.15.7
+        version: 1.15.7(ws@8.18.0)
+      gensx:
+        specifier: workspace:*
+        version: link:../../packages/gensx
+      openai:
+        specifier: ^4.83.0
+        version: 4.83.0(ws@8.18.0)(zod@3.24.1)
     devDependencies:
       '@types/node':
         specifier: ^20.17.11
@@ -3609,6 +3671,18 @@ packages:
 
   openai@4.80.1:
     resolution: {integrity: sha512-+6+bbXFwbIE88foZsBEt36bPkgZPdyFN82clAXG61gnHb2gXdZApDyRrcAHqEtpYICywpqaNo57kOm9dtnb7Cw==}
+    hasBin: true
+    peerDependencies:
+      ws: ^8.18.0
+      zod: ^3.23.8
+    peerDependenciesMeta:
+      ws:
+        optional: true
+      zod:
+        optional: true
+
+  openai@4.83.0:
+    resolution: {integrity: sha512-fmTsqud0uTtRKsPC7L8Lu55dkaTwYucqncDHzVvO64DKOpNTuiYwjbR/nVgpapXuYy8xSnhQQPUm+3jQaxICgw==}
     hasBin: true
     peerDependencies:
       ws: ^8.18.0
@@ -8602,6 +8676,21 @@ snapshots:
       - encoding
 
   openai@4.80.1(ws@8.18.0)(zod@3.24.1):
+    dependencies:
+      '@types/node': 18.19.68
+      '@types/node-fetch': 2.6.12
+      abort-controller: 3.0.0
+      agentkeepalive: 4.6.0
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      node-fetch: 2.7.0
+    optionalDependencies:
+      ws: 8.18.0
+      zod: 3.24.1
+    transitivePeerDependencies:
+      - encoding
+
+  openai@4.83.0(ws@8.18.0)(zod@3.24.1):
     dependencies:
       '@types/node': 18.19.68
       '@types/node-fetch': 2.6.12

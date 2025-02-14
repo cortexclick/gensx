@@ -24,13 +24,15 @@ Make sure to check what environment variables are required for each example.
 
 ## Basic Examples
 
-| Example                                      | Description                                               |
-| -------------------------------------------- | --------------------------------------------------------- |
-| 📊 [Structured Outputs](./structuredOutputs) | Demonstrates using structured outputs with GenSX          |
-| 🔄 [Reflection](./reflection)                | Shows how to use a self-reflection pattern with GenSX     |
-| 🌊 [Streaming](./streaming)                  | Demonstrates how to handle streaming responses with GenSX |
-| 🔌 [Providers](./providers)                  | Shows how to create a custom provider for GenSX           |
-| 🗃️ [Contexts](./contexts)                    | Shows how to use contexts to manage state in GenSX        |
+| Example                                        | Description                                                      |
+| ---------------------------------------------- | ---------------------------------------------------------------- |
+| 📊 [Structured Outputs](./structuredOutputs)   | Demonstrates using structured outputs with GenSX                 |
+| 🔄 [Reflection](./reflection)                  | Shows how to use a self-reflection pattern with GenSX            |
+| 🌊 [Streaming](./streaming)                    | Demonstrates how to handle streaming responses with GenSX        |
+| 🗃️ [Contexts](./contexts)                      | Shows how to use contexts to manage state in GenSX               |
+| 🔌 [Providers](./providers)                    | Shows how to create a custom provider for GenSX                  |
+| 🎭 [Nested Providers](./nestedProviders)       | Demonstrates how to nest and combine multiple providers in GenSX |
+| 🧩 [Reusable Components](./reusableComponents) | Shows how to create and use reusable components in GenSX         |
 
 ## Full Examples
 
